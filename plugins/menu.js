@@ -29,36 +29,38 @@ let handler = async (m, { conn, usedPrefix }) => {
 
     // Texto con la personalidad de Itsuki
     const txt = `
-> ╔══════════════╗
->    ✦ 𝐈𝐓𝐒𝐔𝐊𝐈 ✦
->  « 𝐒𝐢𝐬𝐭𝐞𝐦𝐚 𝐅𝐥𝐨𝐫𝐚𝐥 »
-> ╚════ ❀ 🌸 ❀ ════╝
+╔══════════════╗
+   ✦ 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 ✦
+ « 𝐒𝐢𝐬𝐭𝐞𝐦𝐚 𝐅𝐥𝐨𝐫𝐚𝐥 𝐄𝐥𝐞𝐠𝐚𝐧𝐭𝐞 »
+╚════ ❀ 🌸 ❀ ════╝
 
-> 🌸 *Bienvenido, ${username}.*  
-> He preparado este panel con dedicación,  
-> como cuando estudio con calma y disciplina.
+🌸 *Bienvenido, ${username}.*  
+He preparado este panel con dedicación,  
+como cuando estudio con calma y disciplina.  
+Espero que encuentre todo en perfecto equilibrio.
 
-> ╔════ ❀ 𝐈𝐍𝐅𝐎 ❀ ════╗
-> • Desarrollador: 𝓐𝓪𝓻𝓸𝓶  
-> • Prefijo: [ ${usedPrefix} ]  
-> • Fecha: ${date}  
-> • Estado: Estable ✨  
-> ╚════ ❀ 🌸 ❀ ════╝
+╔════ ❀ 𝐈𝐍𝐅𝐎 𝐃𝐄𝐋 𝐒𝐈𝐒𝐓𝐄𝐌𝐀 ❀ ════╗
+• Desarrollador: 𝓐𝓪𝓻𝓸𝓶  
+• Prefijo: [ ${usedPrefix} ]  
+• Fecha: ${date}  
+• Estado: Operativo ✨  
+╚════ ❀ 🌸 ❀ ════╝
 
-> ╔════ ❀ 𝐂𝐎𝐌𝐀𝐍𝐃𝐎𝐒 ❀ ════╗
+╔════ ❀ 𝐂𝐎𝐌𝐀𝐍𝐃𝐎𝐒 ❀ ════╗
+
 > ➜ ${usedPrefix}donar  
 > ➜ ${usedPrefix}ping  
 > ➜ ${usedPrefix}owner  
 > ➜ ${usedPrefix}play  
 > ➜ ${usedPrefix}sticker  
-> ➜ ${usedPrefix}tiktok 
-> ➜ ${usedPrefix}infobot  
-> ╚════ ❀ 🌸 ❀ ════╝
+> ➜ ${usedPrefix}tiktok  
 
-> 🌸 *“El conocimiento florece cuando se cultiva  
-> con paciencia y constancia.”* ✍️✨
+╚════ ❀ 🌸 ❀ ════╝
 
-> 🌺 *Si necesita más ayuda, estaré aquí para guiarle.*  
+🌺 *“El conocimiento florece cuando se cultiva  
+con paciencia y constancia.”* ✍️✨
+
+🌸 *Si necesita más ayuda, estaré aquí para guiarle.*  
 `.trim()
 
     const bannerBuffer = await getBannerBuffer(bannerSrc)
@@ -77,7 +79,7 @@ let handler = async (m, { conn, usedPrefix }) => {
                 forwardingScore: 999,
                 externalAdReply: {
                     title: `🌟 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 𝐒𝐘𝐒𝐓𝐄𝐌`,
-                    body: `By: 𝓐𝓪𝓻𝓸𝓶 👑`,
+                    body: `By: Aarom 👑`,
                     mediaType: 1,
                     thumbnail: bannerBuffer,
                     renderLargerThumbnail: true,
