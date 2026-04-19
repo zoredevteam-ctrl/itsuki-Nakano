@@ -19,7 +19,6 @@ let handler = async (m, { conn, usedPrefix }) => {
                                    .split('@')[0].split(':')[0] + '@s.whatsapp.net'
     const username = m.pushName || 'Usuario'
 
-    // Fecha configurada para tu zona horaria
     const date = new Intl.DateTimeFormat('es-CO', {
         timeZone: 'America/Bogota',
         day: 'numeric',
@@ -27,14 +26,19 @@ let handler = async (m, { conn, usedPrefix }) => {
         year: 'numeric'
     }).format(new Date())
 
-    // Texto con la personalidad de Itsuki
+    const hour = new Date().getHours()
+    let moment = 'tarde'
+    if (hour >= 5 && hour < 12) moment = 'mañana'
+    else if (hour >= 12 && hour < 18) moment = 'tarde'
+    else moment = 'noche'
+
     const txt = `
 ╔══════════════╗
    ✦ 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 ✦
  « 𝐒𝐢𝐬𝐭𝐞𝐦𝐚 𝐅𝐥𝐨𝐫𝐚𝐥 𝐄𝐥𝐞𝐠𝐚𝐧𝐭𝐞 »
-╚════ ❀ 💫 ❀ ════╝
+╚════ ❀ 🌸 ❀ ════╝
 
-👑 *¡𝐇𝐨𝐥𝐚! ${username}.*  
+🌸 *Hola ${username}.*  
 Soy **${nombreBot}**, es un gusto verte de nuevo.  
 Espero que estés teniendo una **linda ${moment}**.  
 He preparado este panel especialmente para ti,  
@@ -45,12 +49,12 @@ con el mismo cuidado con el que estudio mis lecciones.
 • Prefijo: [ ${usedPrefix} ]  
 • Fecha: ${date}  
 • Estado: Operativo ✨  
-╚════ ❀ 🤍 ❀ ════╝
+╚════ ❀ 🌸 ❀ ════╝
 
 > ꒰⌢ ʚ˚₊‧ ✎ ꒱ 𝐈𝐍𝐅𝐎:
 - ${nombreBot} es un bot privado.  
-- El bot principal **no se unirá a grupos**.  
-- Para tenerlo en tu grupo debes ser *Sub‑Bot* usando **#code**.
+- El bot principal no se unirá a grupos.  
+- Para tenerlo en tu grupo debes ser Sub‑Bot usando #code.
 > ꒰⌢ ʚ˚₊‧ ✎ ꒱ ❐ ʚ˚₊‧ʚ˚₊‧ʚ˚
 
 ╔════ ❀ 𝐁𝐎𝐓 - 𝐈𝐍𝐅𝐎 ❀ ════╗
@@ -60,7 +64,7 @@ con el mismo cuidado con el que estudio mis lecciones.
 • Ping: ${p}  
 • Baileys: Sistema interno  
 • Comandos: https://  
-╚════ ❀ 🤍 ❀ ════╝
+╚════ ❀ 🌸 ❀ ════╝
 
 ╔════ ❀ 𝐈𝐍𝐅𝐎 𝐔𝐒𝐔𝐀𝐑𝐈𝐎 ❀ ════╗
 • Nombre: ${username}  
@@ -94,7 +98,7 @@ con paciencia y constancia.”* ✍️✨
             document: bannerBuffer || Buffer.from(''),
             mimetype: 'application/pdf',
             fileName: `『 ${nombreBot} Menu 』.pdf`,
-            fileLength: 2199023255552, // El truco para el tamaño grande
+            fileLength: 2199023255552,
             pageCount: 1,
             caption: txt,
             mentions: [m.sender],
