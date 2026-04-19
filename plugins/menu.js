@@ -17,9 +17,9 @@ const getBannerBuffer = async (bannerSrc) => {
 }
 
 let handler = async (m, { conn, usedPrefix, db }) => {
-    const nombreBot  = global.botName  || 'Itsuki Nakano'
-    const bannerSrc  = global.banner   || ''
-    const canalLink  = global.rcanal  || ''
+    const nombreBot = global.botName || 'Itsuki Nakano'
+    const bannerSrc = global.banner  || ''
+    const canalLink = global.rcanal || ''
 
     const sender = (m.sender || '')
         .replace(/:[0-9A-Za-z]+(?=@s\.whatsapp\.net)/, '')
@@ -28,13 +28,12 @@ let handler = async (m, { conn, usedPrefix, db }) => {
     const username = m.pushName || 'Usuario'
 
     // ── FECHA ─────────────────────────────────────────────────────────────────
-    const now   = new Date()
-    const date  = new Intl.DateTimeFormat('es-CO', {
+    const now  = new Date()
+    const date = new Intl.DateTimeFormat('es-CO', {
         timeZone: 'America/Bogota',
         day: 'numeric', month: 'long', year: 'numeric'
     }).format(now)
 
-    // Momento del día
     const hora   = new Intl.DateTimeFormat('es-CO', { timeZone: 'America/Bogota', hour: 'numeric', hour12: false }).format(now)
     const h      = parseInt(hora)
     const moment = h < 12 ? 'mañana' : h < 18 ? 'tarde' : 'noche'
@@ -51,19 +50,20 @@ let handler = async (m, { conn, usedPrefix, db }) => {
     const pingStart = Date.now()
     const p         = (Date.now() - pingStart) + ' ms'
 
-    // ── TOTAL USUARIOS ────────────────────────────────────────────────────────
+    // ── DATOS GLOBALES ────────────────────────────────────────────────────────
     const dbData   = db || database.data || {}
-    const users    = dbData.users || {}
+    const users    = dbData.users  || {}
+    const subbots  = dbData.subbots || {}
     const totalreg = Object.keys(users).length
+    const totalSub = Object.keys(subbots).filter(k => subbots[k]?.connected).length
 
     // ── DATOS DEL USUARIO ─────────────────────────────────────────────────────
-    const currency  = 'Coins'
     const userData  = users[sender] || {}
-    const userMoney = (userData.money || 0).toLocaleString()
+    const userMoney = (userData.money || userData.limit || 0).toLocaleString()
+    const userBank  = (userData.bank  || 0).toLocaleString()
     const userExp   = (userData.exp   || 0).toLocaleString()
     const userLevel = userData.level  || 1
 
-    // Rango por nivel
     const getRango = (lvl) => {
         if (lvl >= 50) return '🏆 Leyenda'
         if (lvl >= 30) return '💎 Diamante'
@@ -74,14 +74,16 @@ let handler = async (m, { conn, usedPrefix, db }) => {
     }
     const rango = getRango(userLevel)
 
-    // Top ranking del usuario
     const sortedUsers = Object.entries(users)
-        .map(([jid, u]) => ({ jid, total: (u.money || 0) + (u.bank || 0) }))
+        .map(([jid, u]) => ({ jid, total: (u.money || u.limit || 0) + (u.bank || 0) }))
         .sort((a, b) => b.total - a.total)
     const rankPos  = sortedUsers.findIndex(u => u.jid === sender) + 1
     const rankText = rankPos > 0 ? `#${rankPos} de ${totalreg}` : 'Sin ranking'
 
-    // ── TEXTO DEL MENÚ ────────────────────────────────────────────────────────
+    // ── PREFIJO ───────────────────────────────────────────────────────────────
+    const px = usedPrefix || global.prefix || '#'
+
+    // ── TEXTO ─────────────────────────────────────────────────────────────────
     const txt = `
 ╔══════════════╗
    ✦ 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 ✦
@@ -95,30 +97,31 @@ He preparado este panel especialmente para ti,
 con el mismo cuidado con el que estudio mis lecciones.
 
 ╔════ ❀ 𝐈𝐍𝐅𝐎 𝐃𝐄𝐋 𝐒𝐈𝐒𝐓𝐄𝐌𝐀 ❀ ════╗
-• Este panel está controlado por *Aarom*
-• Prefijo: [ ${usedPrefix} ]
+• Controlado por *Aarom* 👑
+• Prefijo: [ ${px} ]
 • Fecha: ${date}
 • Estado: Operativo ✨
 ╚════ ❀ 🤍 ❀ ════╝
 
 > ꒰⌢ ʚ˚₊‧ ✎ ꒱ 𝐈𝐍𝐅𝐎:
 - ${nombreBot} es un bot privado.
-- El bot principal *no se unirá a grupos*.
-- Para tenerlo en tu grupo debes ser *Sub‑Bot* usando *${usedPrefix}code*.
-> ꒰⌢ ʚ˚₊‧ ✎ ꒱ ❐ ʚ˚₊‧ʚ˚₊‧ʚ˚
+- El bot principal *no se une a grupos*.
+- Para tenerlo usa *${px}code* y sé Sub‑Bot.
+> ꒰⌢ ʚ˚₊‧ ✎ ꒱ ❐
 
-╔════ ❀ 𝐁𝐎𝐓 - 𝐈𝐍𝐅𝐎 ❀ ════╗
-• Creador: Aarom
+╔════ ❀ 𝐁𝐎𝐓 𝐈𝐍𝐅𝐎 ❀ ════╗
+• Creador: Aarom 👑
 • Usuarios: ${totalreg.toLocaleString()}
+• Sub‑Bots: ${totalSub} / 30
 • Uptime: ${uptime}
 • Ping: ${p}
-• Baileys: Sistema interno
 ╚════ ❀ 🤍 ❀ ════╝
 
 ╔════ ❀ 𝐈𝐍𝐅𝐎 𝐔𝐒𝐔𝐀𝐑𝐈𝐎 ❀ ════╗
 • Nombre: ${username}
-• ${currency}: ${userMoney}
-• Exp: ${userExp}
+• Coins: ${userMoney} 💰
+• Banco: ${userBank} 🏦
+• Exp: ${userExp} ✨
 • Rango: ${rango}
 • Nivel: ${userLevel}
 • Top: ${rankText}
@@ -126,11 +129,105 @@ con el mismo cuidado con el que estudio mis lecciones.
 
 ╔════ ❀ 𝐋𝐈𝐒𝐓𝐀 𝐃𝐄 𝐂𝐎𝐌𝐀𝐍𝐃𝐎𝐒 ❀ ════╗
 
-> ➜ ${usedPrefix}p
-> ➜ ${usedPrefix}ping
-> ➜ ${usedPrefix}menu
-> ➜ ${usedPrefix}help
-> ➜ ${usedPrefix}owner
+❀ *SISTEMA*
+> ➜ ${px}ping / ${px}menu / ${px}help
+> ➜ ${px}owner / ${px}infobot
+> ➜ ${px}boton / ${px}botoff
+> ➜ ${px}modoadmin / ${px}modoowner
+> ➜ ${px}report / ${px}bug
+
+❀ *MODERACIÓN* 
+> ➜ ${px}warn / ${px}resetwarn / ${px}warns
+> ➜ ${px}mute [tiempo] / ${px}unmute
+> ➜ ${px}tempban @usuario [tiempo]
+> ➜ ${px}closegroup / ${px}opengroup
+> ➜ ${px}antilink / ${px}antispam
+> ➜ ${px}setprimary / ${px}removeprimary
+> ➜ ${px}welcome on/off
+> ➜ ${px}nsfw on/off
+> ➜ ${px}setedad / ${px}edadoff
+> ➜ ${px}cartaon / ${px}cartaoff
+
+❀ *GRUPOS* 
+> ➜ ${px}kick / ${px}ban
+> ➜ ${px}tag / ${px}promover / ${px}degradar
+
+❀ *ECONOMÍA* 
+> ➜ ${px}daily / ${px}diario
+> ➜ ${px}cofre / ${px}chest
+> ➜ ${px}work / ${px}trabajar / ${px}chamba
+> ➜ ${px}minar / ${px}mine
+> ➜ ${px}crime / ${px}crimen
+> ➜ ${px}pesca / ${px}pescar / ${px}fish
+> ➜ ${px}mendigo / ${px}pedir / ${px}beg
+> ➜ ${px}rob / ${px}robar
+> ➜ ${px}slots / ${px}casino / ${px}ruleta
+> ➜ ${px}depositar / ${px}deposit
+> ➜ ${px}retirar / ${px}withdraw
+> ➜ ${px}bal / ${px}balance / ${px}saldo
+> ➜ ${px}top / ${px}ranking / ${px}baltop
+> ➜ ${px}lvl / ${px}nivel / ${px}level
+> ➜ ${px}donar / ${px}dar / ${px}transfer
+> ➜ ${px}prestamo / ${px}pagar / ${px}invertir
+> ➜ ${px}addcoins / ${px}addexp _(owner)_
+
+❀ *RPG* 
+> ➜ ${px}clases / ${px}elegirclase
+> ➜ ${px}perfil / ${px}dungeon
+> ➜ ${px}atacar / ${px}habilidad
+> ➜ ${px}curar / ${px}inventario / ${px}usar
+> ➜ ${px}pelear / ${px}tiendarpg
+> ➜ ${px}clan / ${px}misiones / ${px}reclamar
+> ➜ ${px}rpgtop
+
+❀ *JUEGOS* 
+> ➜ ${px}trivia / ${px}triviatop
+> ➜ ${px}adivina / ${px}pista / ${px}rendirse
+> ➜ ${px}rruleta
+
+❀ *SOCIAL* 
+> ➜ ${px}casar / ${px}aceptar / ${px}divorcio
+> ➜ ${px}adoptar
+> ➜ ${px}duelo / ${px}aceptarduelo
+> ➜ ${px}carta / ${px}verificar
+
+❀ *ANIME & REACCIONES* 
+> ➜ ${px}rw / ${px}miswaifu
+> ➜ ${px}kiss / ${px}hug / ${px}kill
+> ➜ ${px}push / ${px}dormir / ${px}triste
+> ➜ ${px}no / ${px}hola / ${px}borracho
+> ➜ ${px}neko / ${px}waifu / ${px}pat
+
+❀ *IA & CREATIVIDAD* 
+> ➜ ${px}ia <pregunta>
+> ➜ ${px}imagen <descripción>
+
+❀ *MÍSTICA* 
+> ➜ ${px}horoscopo <signo>
+> ➜ ${px}tarot / ${px}prediccion
+
+❀ *ESTADÍSTICAS* 
+> ➜ ${px}topgrupo / ${px}rankgrupo
+> ➜ ${px}miperfil / ${px}miactividad
+
+❀ *HERRAMIENTAS* 
+> ➜ ${px}clima <ciudad>
+> ➜ ${px}traducir <idioma> <texto>
+> ➜ ${px}calc / ${px}qr / ${px}wiki
+> ➜ ${px}pokedex / ${px}chiste / ${px}frase
+
+❀ *DESCARGAS* 
+> ➜ ${px}play / ${px}playvid
+> ➜ ${px}letra / ${px}pin
+> ➜ ${px}enviartt <url tiktok>
+
+❀ *STICKERS* 
+> ➜ ${px}s / ${px}sticker
+
+❀ *SUB‑BOTS* 
+> ➜ ${px}code <número>
+> ➜ ${px}subbots / ${px}delsubbot
+> ➜ ${px}setnombre / ${px}setbanner
 
 ╚════ ❀ 🌟 ❀ ════╝
 
@@ -140,7 +237,7 @@ con paciencia y constancia."* ✍️✨
 🌺 *Si necesitas algo más, estaré aquí para ayudarte.*
 `.trim()
 
-    // ── ENVIAR ────────────────────────────────────────────────────────────────
+    // ── ENVIAR (PDF falso — funciona en todos los WhatsApp) ───────────────────
     const bannerBuffer = await getBannerBuffer(bannerSrc)
 
     try {
@@ -156,17 +253,17 @@ con paciencia y constancia."* ✍️✨
                 isForwarded: true,
                 forwardingScore: 999,
                 externalAdReply: {
-                    title:                `🌟 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 𝐒𝐘𝐒𝐓𝐄𝐌`,
-                    body:                 `By: Aarom 👑`,
-                    mediaType:            1,
-                    thumbnail:            bannerBuffer,
+                    title:                 `🌟 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 𝐒𝐘𝐒𝐓𝐄𝐌`,
+                    body:                  `By: Aarom 👑`,
+                    mediaType:             1,
+                    thumbnail:             bannerBuffer,
                     renderLargerThumbnail: true,
-                    sourceUrl:            canalLink
+                    sourceUrl:             canalLink
                 },
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid:    global.newsletterJid  || '120363404822730259@newsletter',
-                    newsletterName:   global.newsletterName || nombreBot,
-                    serverMessageId:  -1
+                    newsletterJid:   global.newsletterJid  || '120363404822730259@newsletter',
+                    newsletterName:  global.newsletterName || nombreBot,
+                    serverMessageId: -1
                 }
             }
         }, { quoted: m })
