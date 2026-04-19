@@ -49,11 +49,11 @@ let handler = async (m, { conn, usedPrefix }) => {
 ◈━━━━━━━━━━━━━━━━━━━━━◈
 
   >  ꧁ ✶ ◈ ${usedPrefix}donar
-  >  ꧁ ✶ ◈ ${usedPrefix}ping
-  >  ꧁ ✶ ◈ ${usedPrefix}owner
-  >  ꧁ ✶ ◈ ${usedPrefix}play
-  >  ꧁ ✶ ◈ ${usedPrefix}sticker
-  >  ꧁ ✶ ◈ ${usedPrefix}tiktok
+  > *“꧁ ✶ ◈ ${usedPrefix}ping”*
+  > *“꧁ ✶ ◈ ${usedPrefix}owner”*
+  > *“꧁ ✶ ◈ ${usedPrefix}play”*
+  > *“꧁ ✶ ◈ ${usedPrefix}sticker”*
+  > *“꧁ ✶ ◈ ${usedPrefix}tiktok”*
 
 ◈━━━━━━━━━━━━━━━━━━━━━◈
 
