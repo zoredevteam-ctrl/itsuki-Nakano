@@ -29,7 +29,9 @@ let handler = async (m, { conn, usedPrefix }) => {
 
     // Texto con la personalidad de Itsuki
     const txt = `
- ─── 𝖨𝖳𝖲𝖴𝖪𝖨 𝖭𝖠𝖪𝖠𝖭𝖮 𝖲𝖸𝖲𝖳𝖤𝖬 ─── 
+╔══❖═══✧═══❖════❖══╗
+║ 𝖨𝖳𝖲𝖴𝖪𝖨 𝖭𝖠𝖪𝖠𝖭𝖮 𝖲𝖸𝖲𝖳𝖤𝖬║
+╚══❖═══✧═══❖════❖══╝ 
 
  *Sea usted bienvenido, ${username}. He organizado cuidadosamente cada sección para que su experiencia sea eficiente y ordenada.*
 
