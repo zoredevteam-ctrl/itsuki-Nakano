@@ -29,29 +29,29 @@ let handler = async (m, { conn, usedPrefix }) => {
 
     // Texto con la personalidad de Itsuki
     const txt = `
-👑 ─── 𝖨𝖳𝖲𝖴𝖪𝖨 𝖭𝖠𝖪𝖠𝖭𝖮 𝖲𝖸𝖲𝖳𝖤𝖬 ─── 👑
+ ─── 𝖨𝖳𝖲𝖴𝖪𝖨 𝖭𝖠𝖪𝖠𝖭𝖮 𝖲𝖸𝖲𝖳𝖤𝖬 ─── 
 
-🌷 *Sea usted bienvenido, ${username}. He organizado cuidadosamente cada sección para que su experiencia sea eficiente y ordenada. ✨*
+ *Sea usted bienvenido, ${username}. He organizado cuidadosamente cada sección para que su experiencia sea eficiente y ordenada.*
 
 ╔════════════════════════╗
-┃  🌟 **﹝ 𝖱𝖤𝖯𝖮𝖱𝖳𝖤 𝖣𝖤𝖫 𝖲𝖨𝖲𝖳𝖤𝖬𝖠 ﹞**
-┠───────────────┈ ✨
-┃ ❃ **𝖣𝖾𝗌𝖺𝗋𝗋𝗈𝗅𝗅𝖺𝖽𝗈𝗋:** Aarom 👑
-┃ ❃ **𝖯𝗋𝖾𝖿𝗂𝗃𝗈:** [ ${usedPrefix} ] 🌟
-┃ ❃ **𝖥𝖾𝖼𝗁𝖺:** ${date} 🌺
-┃ ❃ **𝖤𝗌𝗍𝖺𝖽𝗈:** Operativo 🌷
+┃   **﹝ 𝖱𝖤𝖯𝖮𝖱𝖳𝖤 𝖣𝖤𝖫 𝖲𝖨𝖲𝖳𝖤𝖬𝖠 ﹞**
+┠───────────────┈ 
+┃ ❃ **𝖣𝖾𝗌𝖺𝗋𝗋𝗈𝗅𝗅𝖺𝖽𝗈𝗋:** 𝓐𝓪𝓻𝓸𝓶 
+┃ ❃ **𝖯𝗋𝖾𝖿𝗂𝗃𝗈:** [ ${usedPrefix} ] 
+┃ ❃ **𝖥𝖾𝖼𝗁𝖺:** ${date} 
+┃ ❃ **𝖤𝗌𝗍𝖺𝖽𝗈:** Operativo 
 ╚════════════════════════╝
 
 ◈━━━━━━━━━ 🌟 ━━━━━━━━━◈
   ✨  **﹝ 𝖫𝖨𝖲𝖳𝖠 𝖣𝖤 𝖯𝖱𝖮𝖳𝖮𝖢𝖮𝖫𝖮𝖲 ﹞** ✨
 ◈━━━━━━━━━━━━━━━━━━━━━◈
 
-    🌷 ◈ ${usedPrefix}donar
-    🌺 ◈ ${usedPrefix}ping
-    👑 ◈ ${usedPrefix}owner
-    🌟 ◈ ${usedPrefix}play
-    ✨ ◈ ${usedPrefix}sticker
-    🌷 ◈ ${usedPrefix}tiktok
+     ◈ ${usedPrefix}donar
+     ◈ ${usedPrefix}ping
+     ◈ ${usedPrefix}owner
+     ◈ ${usedPrefix}play
+     ◈ ${usedPrefix}sticker
+     ◈ ${usedPrefix}tiktok
 
 ◈━━━━━━━━━━━━━━━━━━━━━◈
 
