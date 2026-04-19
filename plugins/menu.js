@@ -34,7 +34,7 @@ let handler = async (m, { conn, usedPrefix }) => {
  « 𝐒𝐢𝐬𝐭𝐞𝐦𝐚 𝐅𝐥𝐨𝐫𝐚𝐥 𝐄𝐥𝐞𝐠𝐚𝐧𝐭𝐞 »
 ╚════ ❀ 💫 ❀ ════╝
 
- *Hola ${username}.*  
+👑 *¡𝐇𝐨𝐥𝐚! ${username}.*  
 Soy **${nombreBot}**, es un gusto verte de nuevo.  
 Espero que estés teniendo una **linda ${moment}**.  
 He preparado este panel especialmente para ti,  
