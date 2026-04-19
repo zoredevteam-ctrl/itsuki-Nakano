@@ -45,15 +45,15 @@ let handler = async (m, { conn, usedPrefix }) => {
 ╚════════════════════════╝
 
 ◈━━━━━━━━━ 🌟 ━━━━━━━━━◈
-  ✨  **﹝ 𝖫𝖨𝖲𝖳𝖠 𝖣𝖤 𝖯𝖱𝖮𝖳𝖮𝖢𝖮𝖫𝖮𝖲 ﹞** ✨
+  ✨  **﹝ 𝖫𝖨𝖲𝖳𝖠 𝖣𝖤 COMANDOS ﹞** ✨
 ◈━━━━━━━━━━━━━━━━━━━━━◈
 
-> *“꧁ ✶ ◈ ${usedPrefix}donar”*
-> *“꧁ ✶ ◈ ${usedPrefix}ping”*
-> *“꧁ ✶ ◈ ${usedPrefix}owner”*
-> *“꧁ ✶ ◈ ${usedPrefix}play”*
-> *“꧁ ✶ ◈ ${usedPrefix}sticker”*
-> *“꧁ ✶ ◈ ${usedPrefix}tiktok”*
+> *꧁ ✶ ◈ ${usedPrefix}donar*
+> *꧁ ✶ ◈ ${usedPrefix}ping*
+> *꧁ ✶ ◈ ${usedPrefix}owner*
+> *꧁ ✶ ◈ ${usedPrefix}play*
+> *꧁ ✶ ◈ ${usedPrefix}sticker*
+> *꧁ ✶ ◈ ${usedPrefix}tiktok*
 
 ◈━━━━━━━━━━━━━━━━━━━━━◈
 
