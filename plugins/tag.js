@@ -1,41 +1,79 @@
-import { generateWAMessageFromContent } from '@whiskeysockets/baileys'
-import * as fs from 'fs'
+/**
+ * TAG - ITSUKI NAKANO
+ * Menciona a todos los miembros del grupo
+ * Comandos: #tag, #everyone, #todos
+ * Solo admins y owners
+ * Z0RT SYSTEMS 🌸
+ */
 
-var handler = async (m, { conn, text, participants, isOwner, isAdmin }) => {
-if (!m.quoted && !text) return conn.reply(m.chat, `《✧》 Por favor, ingresa un texto o cita un mensaje.`, m)
-try { 
-let users = participants.map(u => conn.decodeJid(u.id))
-let q = m.quoted ? m.quoted : m || m.text || m.sender
-let c = m.quoted ? await m.getQuotedObj() : m.msg || m.text || m.sender
-let msg = conn.cMod(m.chat, generateWAMessageFromContent(m.chat, { [m.quoted ? q.mtype : 'extendedTextMessage']: m.quoted ? c.message[q.mtype] : { text: '' || c }}, { quoted: null, userJid: conn.user.id }), text || q.text, conn.user.jid, { mentions: users })
-await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
-} catch {    
-let users = participants.map(u => conn.decodeJid(u.id))
-let quoted = m.quoted ? m.quoted : m
-let mime = (quoted.msg || quoted).mimetype || ''
-let isMedia = /image|video|sticker|audio/.test(mime)
-let more = String.fromCharCode(8206)
-let masss = more.repeat(850)
-let htextos = `${text ? text : ''}`
-if ((isMedia && quoted.mtype === 'imageMessage') && htextos) {
-var mediax = await quoted.download?.()
-conn.sendMessage(m.chat, { image: mediax, mentions: users, caption: htextos, mentions: users }, { quoted: null })
-} else if ((isMedia && quoted.mtype === 'videoMessage') && htextos) {
-var mediax = await quoted.download?.()
-conn.sendMessage(m.chat, { video: mediax, mentions: users, mimetype: 'video/mp4', caption: htextos }, { quoted: null })
-} else if ((isMedia && quoted.mtype === 'audioMessage') && htextos) {
-var mediax = await quoted.download?.()
-conn.sendMessage(m.chat, { audio: mediax, mentions: users, mimetype: 'audio/mp4', fileName: `Hidetag.mp3` }, { quoted: null })
-} else if ((isMedia && quoted.mtype === 'stickerMessage') && htextos) {
-var mediax = await quoted.download?.()
-conn.sendMessage(m.chat, {sticker: mediax, mentions: users}, { quoted: null })
-} else {
-await conn.reply(m.chat, htextos, null, { mentions: [users] })
-}}}
+let handler = async (m, { conn, text, usedPrefix, command }) => {
+    if (!m.isGroup) {
+        return conn.sendMessage(m.chat, {
+            text: '🌸 Este comando solo funciona en grupos~'
+        }, { quoted: m })
+    }
 
-handler.help = ['hidetag', 'tag']
-handler.tags = ['grupo']
-handler.command = ['hidetag', 'tag', 'n']
-handler.admin = true
+    await m.react('⏳')
 
+    try {
+        const meta    = await conn.groupMetadata(m.chat)
+        const members = meta.participants.map(p => p.id)
+        const nombre  = meta.subject || 'el grupo'
+        const msg     = (text || '').trim() || '¡Atención a todos! 🌸'
+
+        // Construir menciones en bloques de 50 (límite de WhatsApp)
+        const CHUNK = 50
+        const chunks = []
+        for (let i = 0; i < members.length; i += CHUNK) {
+            chunks.push(members.slice(i, i + CHUNK))
+        }
+
+        const thumb = await global.getBannerThumb()
+        const ctx   = global.getNewsletterCtx(
+            thumb,
+            `📢 ${global.botName || 'Itsuki Nakano'}`,
+            nombre
+        )
+
+        for (let i = 0; i < chunks.length; i++) {
+            const chunk   = chunks[i]
+            const esPrimero = i === 0
+
+            const menciones = chunk.map(jid => `@${jid.split('@')[0]}`).join(' ')
+
+            const caption = esPrimero
+                ? `╔════ ❀ 𝐓𝐀𝐆 𝐆𝐑𝐔𝐏𝐎 ❀ ════╗\n\n` +
+                  `📢 *${msg}*\n\n` +
+                  `👥 *Grupo:* ${nombre}\n` +
+                  `🌸 *Miembros:* ${members.length}\n\n` +
+                  menciones + '\n\n' +
+                  `╚════ ❀ 🌷 ❀ ════╝`
+                : menciones
+
+            await conn.sendMessage(m.chat, {
+                text:     caption,
+                mentions: chunk,
+                contextInfo: esPrimero ? ctx : undefined
+            }, { quoted: m })
+
+            // Pequeña pausa entre bloques para evitar spam block
+            if (i < chunks.length - 1) {
+                await new Promise(r => setTimeout(r, 1000))
+            }
+        }
+
+        await m.react('✅')
+
+    } catch (e) {
+        console.error('[TAG ERROR]', e.message)
+        await m.react('❌')
+        conn.sendMessage(m.chat, {
+            text: `❌ Error al tagear: ${e.message}`
+        }, { quoted: m })
+    }
+}
+
+handler.command  = ['tag', 'everyone', 'todos', 'tagall']
+handler.group    = true
+handler.admin    = true
 export default handler
