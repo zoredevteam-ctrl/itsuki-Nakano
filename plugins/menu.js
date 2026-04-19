@@ -1,9 +1,13 @@
-import moment from 'moment-timezone'
-
 let handler = async (m, { conn, usedPrefix }) => {
     try {
-        // Fecha configurada para tu zona horaria
-        const date = moment.tz('America/Bogota').locale('es').format('dddd, D [de] MMMM [del] YYYY')
+        // Obtenemos la fecha exacta usando código nativo (Sin instalar moment)
+        const date = new Intl.DateTimeFormat('es-CO', {
+            timeZone: 'America/Bogota',
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        }).format(new Date())
 
         let menuText = `
 👑 ─── 𝖨𝖳𝖲𝖴𝖪𝖨 𝖭𝖠𝖪𝖠𝖭𝖮 𝖲𝖸𝖲𝖳𝖤𝖬 ─── 👑
@@ -37,7 +41,7 @@ let handler = async (m, { conn, usedPrefix }) => {
 🌟 ━━━━━━━━━━━━━━━━━━ 🌟
 🌺 *Espero que este orden sea de su agrado. Estaré aquí si requiere asistencia adicional.* 🌷`.trim()
 
-        // Obtenemos la imagen del banner y el contexto del newsletter desde tu settings.js
+        // Obtenemos la imagen del banner y el contexto del newsletter
         let thumbnail = await global.getBannerThumb()
         let context = global.getNewsletterCtx(
             thumbnail, 
@@ -45,20 +49,18 @@ let handler = async (m, { conn, usedPrefix }) => {
             'Menú Principal de Asistencia 🌺'
         )
 
-        // Enviamos el mensaje con el diseño premium
+        // Enviamos el mensaje
         await conn.sendMessage(m.chat, {
             text: menuText,
             contextInfo: context
         }, { quoted: m })
 
     } catch (e) {
-        console.error(e)
-        // Respuesta en personaje si algo falla
+        console.error('[ERROR EN MENU]:', e)
         m.reply(`💢 *¡Oh no, hubo un error al cargar mis apuntes!* 😔\nPor favor, avísale a Aarom para que lo revise. 🍀`)
     }
 }
 
-// Configuración del comando
+// Comandos que activan este menú
 handler.command = ['menu', 'allmenu', 'help', 'comandos']
-handler.register = true // Requiere que el usuario esté registrado según tu handler
 export default handler
