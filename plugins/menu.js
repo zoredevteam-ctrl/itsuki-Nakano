@@ -254,7 +254,7 @@ con paciencia y constancia."* ✍️✨
                 forwardingScore: 999,
                 externalAdReply: {
                     title:                 `🌟 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 𝐒𝐘𝐒𝐓𝐄𝐌`,
-                    body:                  `By: Aarom 👑`,
+                    body:                  `By: 𝓐𝓪𝓻𝓸𝓶 👑`,
                     mediaType:             1,
                     thumbnail:             bannerBuffer,
                     renderLargerThumbnail: true,
