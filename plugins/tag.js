@@ -1,10 +1,10 @@
 export default {
   command: ['hidetag', 'tag', 'todos'],
   category: 'grupo',
-  isAdmin: true, // Asegúrate de que tu core use 'isAdmin' o cámbialo a 'admin: true'
-  run: async (client, m, args, usedPrefix, command) => {
-    const groupMetadata = m.isGroup ? await client.groupMetadata(m.chat).catch(() => null) : null
-    const groupParticipants = groupMetadata?.participants || []
+  isAdmin: true, 
+  run: async (client, m, { args, participants }) => {
+    // Usamos directamente 'participants' que ya viene en los argumentos del comando
+    const groupParticipants = participants || []
     const mentions = groupParticipants.map(p => p.id)
     const userText = (args.join(' ') || '').trim()
     const src = m.quoted || m
@@ -17,7 +17,7 @@ export default {
     const isQuoted = Boolean(m.quoted)
     const originalText = (src.caption || src.text || src.body || '').trim()
 
-    // Configuración del Newsletter y AdReply (Estilo Itsuki)
+    // Configuración Itsuki Style 👑
     const contextInfo = {
       isForwarded: true,
       forwardingScore: 99,
@@ -38,7 +38,6 @@ export default {
     try {
       const options = { mentions, contextInfo, quoted: null }
 
-      // Tag con Imagen o Video
       if (hasImage || hasVideo) {
         const media = await src.download()
         const caption = isQuoted ? originalText : userText
@@ -49,29 +48,27 @@ export default {
         }
       }
 
-      // Tag con Audio
       if (hasAudio) {
         const media = await src.download()
         return client.sendMessage(m.chat, { audio: media, mimetype: 'audio/mp4', fileName: 'hidetag.mp3', ...options })
       }
 
-      // Tag con Sticker
       if (hasSticker) {
         const media = await src.download()
         return client.sendMessage(m.chat, { sticker: media, ...options })
       }
 
-      // Tag con Texto (Quoted o Nuevo)
       const finalChat = (isQuoted && originalText) ? originalText : userText
       if (finalChat) {
         let txt = `👑 ─── 𝖠𝖵𝖨𝖲𝖮 𝖦𝖤𝖭𝖤𝖱𝖠𝖫 ─── 👑\n\n${finalChat}\n\n🌟 ━━━━━━━━━━━━━━━━━━ 🌟`
         return client.sendMessage(m.chat, { text: txt, ...options })
       }
 
-      return m.reply(`🌷 *Protocolo incompleto.* Ingrese un texto o responda a un mensaje para realizar el tag general. ✨`)
+      return m.reply(`🌷 *Protocolo incompleto.* Ingrese un texto o responda a un mensaje. ✨`)
 
     } catch (e) {
-      return m.reply(`> ❌ Error en el sistema: *${e.message}*`)
+      console.error(e)
+      return m.reply(`> ❌ Error técnico: *${e.message}*`)
     }
   }
 }
