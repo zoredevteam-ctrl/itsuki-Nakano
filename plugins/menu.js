@@ -97,7 +97,7 @@ He preparado este panel especialmente para ti,
 con el mismo cuidado con el que estudio mis lecciones.
 
 ╔════ ❀ 𝐈𝐍𝐅𝐎 𝐃𝐄𝐋 𝐒𝐈𝐒𝐓𝐄𝐌𝐀 ❀ ════╗
-• Controlado por *Aarom* 👑
+• Desarrollado por *𝓐𝓪𝓻𝓸𝓶* 👑
 • Prefijo: [ ${px} ]
 • Fecha: ${date}
 • Estado: Operativo ✨
@@ -127,7 +127,7 @@ con el mismo cuidado con el que estudio mis lecciones.
 • Top: ${rankText}
 ╚════ ❀ 🌷 ❀ ════╝
 
-╔════ ❀ 𝐋𝐈𝐒𝐓𝐀 𝐃𝐄 𝐂𝐎𝐌𝐀𝐍𝐃𝐎𝐒 ❀ ════╗
+╔ ❀ 𝐋𝐈𝐒𝐓𝐀 𝐃𝐄 𝐂𝐎𝐌𝐀𝐍𝐃𝐎𝐒 ❀ ╗
 
 ❀ *SISTEMA*
 > ➜ ${px}ping / ${px}menu / ${px}help
