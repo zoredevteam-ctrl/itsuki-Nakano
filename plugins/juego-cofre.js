@@ -1,7 +1,11 @@
 export default {
   command: ['cofre', 'suerte', 'regalo'],
   category: 'juegos',
-  run: async (client, m, args, usedPrefix, command) => {
+  run: async (m, { conn, args, usedPrefix, command }) => {
+    // Definimos los argumentos de forma segura
+    const textArgs = args || []
+    const cofreElegido = textArgs[0]
+
     // Configuración Itsuki Style 👑
     const contextInfo = {
       isForwarded: true,
@@ -15,13 +19,13 @@ export default {
       },
       forwardedNewsletterMessageInfo: {
         newsletterJid: global.newsletterJid || '120363404822730259@newsletter',
-        newsletterName: global.newsletterName || '𓆩 ✧ 𝐈𝐭𝐬𝐮𝐤𝐢 ⌁ 𝑼𝒑𝒅𝒂𝒕𝒆𝒔 ✧ 𓆪',
+        newsletterName: global.newsletterName || '𓆩 ✧ 𝐈𝐭𝐬𝐮𝐤𝐢 ⌁ 𝑼𝒑𝒅𝒂𝒕𝐞𝐬 ✧ 𓆪',
         serverMessageId: -1
       }
     }
 
-    // Si el usuario ya eligió un cofre (el botón envía el comando con el argumento)
-    if (args[0]) {
+    // Lógica si el usuario ya tocó un botón
+    if (cofreElegido) {
       const suertes = [
         "🌟 ¡Excelente elección! Su fortuna hoy es de 100%. Un gran éxito le espera.",
         "🌷 Ha encontrado una nota de estudio: 'El esfuerzo de hoy es el triunfo de mañana'.",
@@ -33,12 +37,12 @@ export default {
       const randomSuerte = suertes[Math.floor(Math.random() * suertes.length)]
       
       let resTxt = `👑 ─── 𝖱𝖤𝖲𝖴𝖫𝖳𝖠𝖣𝖮 ─── 👑\n\n` +
-                   `🌷 *Usted ha abierto el ${args[0].toUpperCase()} y esto es lo que contenía:*\n\n` +
+                   `🌷 *Usted ha abierto el ${cofreElegido.toUpperCase()} y esto es lo que contenía:*\n\n` +
                    `> ${randomSuerte}\n\n` +
                    `🌟 ━━━━━━━━━━━━━━━━━━ 🌟\n` +
                    `🌺 *Gracias por participar. Aarom & Félix esperan que haya sido de su agrado.* 🌷`
       
-      return client.sendMessage(m.chat, { text: resTxt, contextInfo }, { quoted: m })
+      return conn.sendMessage(m.chat, { text: resTxt, contextInfo }, { quoted: m })
     }
 
     // Mensaje inicial con los botones
@@ -47,9 +51,9 @@ export default {
               `> _¿Cuál desea abrir hoy?_`
 
     const buttons = [
-      { buttonId: `${usedPrefix + command} cofre1`, buttonText: { displayText: '🎁 Madera' }, type: 1 },
-      { buttonId: `${usedPrefix + command} cofre2`, buttonText: { displayText: '🎁 Plata' }, type: 1 },
-      { buttonId: `${usedPrefix + command} cofre3`, buttonText: { displayText: '🎁 Dorado' }, type: 1 }
+      { buttonId: `${usedPrefix + command} madera`, buttonText: { displayText: '🎁 Madera' }, type: 1 },
+      { buttonId: `${usedPrefix + command} plata`, buttonText: { displayText: '🎁 Plata' }, type: 1 },
+      { buttonId: `${usedPrefix + command} oro`, buttonText: { displayText: '🎁 Dorado' }, type: 1 }
     ]
 
     const buttonMessage = {
@@ -60,6 +64,6 @@ export default {
       contextInfo: contextInfo
     }
 
-    await client.sendMessage(m.chat, buttonMessage, { quoted: m })
+    await conn.sendMessage(m.chat, buttonMessage, { quoted: m })
   }
 }
