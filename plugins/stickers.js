@@ -27,47 +27,60 @@ const sendStk = async (conn, m, text, isError = false) => {
     return conn.sendMessage(m.chat, { text, contextInfo: ctx }, { quoted: m })
 }
 
+// Función Exif mejorada para evitar stickers corruptos (fantasmas)
 const addExif = async (buffer, pack, author) => {
     try {
-        const json = JSON.stringify({
-            'sticker-pack-id':        'itsuki_' + Date.now(),
-            'sticker-pack-name':      pack,
+        const json = {
+            'sticker-pack-id': `itsuki-${Date.now()}`,
+            'sticker-pack-name': pack,
             'sticker-pack-publisher': author,
             'emojis': ['🌸']
-        })
-        const jsonBuf    = Buffer.from(json, 'utf8')
-        const exifHeader = Buffer.from([0x49,0x49,0x2A,0x00,0x08,0x00,0x00,0x00,0x01,0x00,0x41,0x57,0x07,0x00])
-        const countBuf   = Buffer.alloc(4); countBuf.writeUInt32LE(jsonBuf.length, 0)
-        const offsetBuf  = Buffer.alloc(4); offsetBuf.writeUInt32LE(0x16, 0)
-        let exifData     = Buffer.concat([exifHeader, countBuf, offsetBuf, jsonBuf])
-        const origLen    = exifData.length
-        let chunkData    = exifData
-        if (origLen % 2 === 1) chunkData = Buffer.concat([chunkData, Buffer.from([0x00])])
-        const chunkName  = Buffer.from('EXIF')
-        const chunkSize  = Buffer.alloc(4); chunkSize.writeUInt32LE(origLen, 0)
-        const added      = Buffer.concat([chunkName, chunkSize, chunkData])
-        let result       = Buffer.concat([buffer, added])
-        result.writeUInt32LE(result.length - 8, 4)
-        return result
-    } catch { return buffer }
+        }
+        const exifHeader = Buffer.from([0x49, 0x49, 0x2A, 0x00, 0x08, 0x00, 0x00, 0x00, 0x01, 0x00, 0x41, 0x57, 0x07, 0x00])
+        const jsonBuf = Buffer.from(JSON.stringify(json), 'utf8')
+        const lenBuf = Buffer.allocUnsafe(4)
+        lenBuf.writeUInt32LE(jsonBuf.length, 0)
+        
+        const exif = Buffer.concat([exifHeader, lenBuf, jsonBuf])
+        
+        // Buscamos el final del archivo WebP para insertar el chunk EXIF correctamente
+        let len = buffer.length
+        if (buffer[len - 2] === 0x00) len--
+        
+        return Buffer.concat([
+            buffer.slice(0, len),
+            Buffer.from('EXIF'),
+            lenBuf,
+            exif
+        ])
+    } catch (e) {
+        console.error('Error en Exif:', e)
+        return buffer
+    }
 }
 
 const imageToWebp = async (buffer) => {
     const input = tmp('img'); const output = tmp('webp')
     try {
         await writeFile(input, buffer)
-        await execAsync(`ffmpeg -y -i "${input}" -vf "scale=512:512:force_original_aspect_ratio=decrease,pad=512:512:(ow-iw)/2:(oh-ih)/2:color=white@0" -quality 80 "${output}"`)
+        // Ajuste de pix_fmt y color transparente para evitar el fondo blanco/fantasma
+        await execAsync(`ffmpeg -i "${input}" -vf "scale=512:512:force_original_aspect_ratio=decrease,pad=512:512:(ow-iw)/2:(oh-ih)/2:color=0x00000000" -pix_fmt yuva420p -q:v 75 "${output}"`)
         return await readFile(output)
-    } finally { await unlink(input).catch(()=>{}); await unlink(output).catch(()=>{}) }
+    } finally { 
+        await Promise.all([unlink(input).catch(()=>{}), unlink(output).catch(()=>{} )])
+    }
 }
 
 const videoToWebp = async (buffer) => {
     const input = tmp('mp4'); const output = tmp('webp')
     try {
         await writeFile(input, buffer)
-        await execAsync(`ffmpeg -y -i "${input}" -vf "scale=512:512:force_original_aspect_ratio=decrease,pad=512:512:(ow-iw)/2:(oh-ih)/2:color=white@0,fps=15" -vcodec libwebp -lossless 0 -compression_level 6 -quality 50 -loop 0 -preset picture -an -vsync 0 -t 8 "${output}"`)
+        // Optimización para GIFs/Videos: FPS controlado y compresión WebP real
+        await execAsync(`ffmpeg -i "${input}" -vcodec libwebp -filter:v "fps=15,scale=512:512:force_original_aspect_ratio=decrease,pad=512:512:(ow-iw)/2:(oh-ih)/2:color=0x00000000" -lossless 0 -compression_level 4 -q:v 50 -loop 0 -preset picture -an -vsync 0 -t 10 "${output}"`)
         return await readFile(output)
-    } finally { await unlink(input).catch(()=>{}); await unlink(output).catch(()=>{}) }
+    } finally { 
+        await Promise.all([unlink(input).catch(()=>{}), unlink(output).catch(()=>{} )])
+    }
 }
 
 let handler = async (m, { conn, command, text }) => {
@@ -75,20 +88,16 @@ let handler = async (m, { conn, command, text }) => {
     const quoted = m.quoted || m
     const msg    = quoted?.message || m.message
 
-    // ── TOIMG ─────────────────────────────────────────────────────────────────
     if (cmd === 'toimg') {
         const q    = m.quoted ? m.quoted : m
         const mime = (q.msg || q).mimetype || ''
-        if (!mime || !/webp/.test(mime)) return sendStk(conn, m,
-            `🌸 *TOIMG*\n\nResponde a un *sticker* para convertirlo a imagen~\n_Ejemplo: responde al sticker con *${global.prefix||'#'}toimg*_`
-        )
+        if (!/webp/.test(mime)) return sendStk(conn, m, `🌸 Responde a un sticker para convertirlo.`)
+        
         await m.react('⏳')
         try {
-            // CORRECCIÓN: Se usa la función importada directamente
             const media = await downloadMediaMessage(q, 'buffer', {}, { reuploadRequest: conn.updateMediaMessage })
-            const thumb = await global.getBannerThumb()
-            const ctx   = global.getNewsletterCtx(thumb, `🖼️ ${global.botName||'Itsuki Nakano'}`, 'Sticker → Imagen 🌸')
-            await conn.sendMessage(m.chat, { image: media, caption: `🖼️ *¡Aquí está tu imagen!*\n\n_Con cariño~ 🌸_`, contextInfo: ctx }, { quoted: m })
+            // Convertir de WebP a PNG/JPG si es necesario, pero WhatsApp suele aceptar el buffer directo si es estático
+            await conn.sendMessage(m.chat, { image: media, caption: `🌸 *¡Aquí tienes!*` }, { quoted: m })
             await m.react('✅')
         } catch (e) {
             await m.react('❌')
@@ -97,19 +106,10 @@ let handler = async (m, { conn, command, text }) => {
         return
     }
 
-    // ── STICKER ───────────────────────────────────────────────────────────────
-    if (!msg) return sendStk(conn, m,
-        `🌸 *STICKER MAKER*\n\nResponde a una *imagen*, *video* o *GIF* con *${global.prefix||'#'}s*~\n\n_Ejemplo: #s NombrePack | Autor_`
-    )
+    if (!msg) return sendStk(conn, m, `🌸 Responde a una imagen o video con *${global.prefix||'#'}s*`)
 
-    const imageMsg   = msg.imageMessage
-    const videoMsg   = msg.videoMessage
-    const stickerMsg = msg.stickerMessage
-    const gifMsg     = videoMsg?.gifPlayback ? videoMsg : null
-
-    if (!imageMsg && !videoMsg && !stickerMsg) return sendStk(conn, m,
-        `🌸 Responde a una *imagen*, *video* o *GIF*~`
-    )
+    const type = Object.keys(msg)[0]
+    if (!/image|video|sticker/.test(type)) return sendStk(conn, m, `🌸 Formato no compatible.`)
 
     const parts  = (text || '').split('|').map(s => s.trim())
     const pack   = parts[0] || PACK_NAME
@@ -117,29 +117,25 @@ let handler = async (m, { conn, command, text }) => {
 
     await m.react('⏳')
     try {
-        let webpBuffer
-        // CORRECCIÓN GLOBAL: Se reemplaza conn.downloadMediaMessage por la función importada
         const mediaBuffer = await downloadMediaMessage(quoted, 'buffer', {}, { reuploadRequest: conn.updateMediaMessage })
+        let webpBuffer
 
-        if (stickerMsg) {
+        if (/sticker/.test(type)) {
             webpBuffer = mediaBuffer
-        } else if (gifMsg || videoMsg) {
+        } else if (/video/.test(type) || msg[type].gifPlayback) {
             webpBuffer = await videoToWebp(mediaBuffer)
         } else {
             webpBuffer = await imageToWebp(mediaBuffer)
         }
 
-        if (!webpBuffer || webpBuffer.length < 100) throw new Error('WebP vacío o corrupto')
-
         const final = await addExif(webpBuffer, pack, author)
+        
         await conn.sendMessage(m.chat, { sticker: final }, { quoted: m })
         await m.react('✅')
     } catch (e) {
-        await m.react('❌')
-        let errMsg = `❌ *Error al crear sticker*\n\n⚠️ ${e.message}`
-        if (e.message.includes('ffmpeg')) errMsg += '\n_Instala ffmpeg: `apt install ffmpeg`_';
         console.error(e)
-        await sendStk(conn, m, errMsg, true)
+        await m.react('❌')
+        await sendStk(conn, m, `❌ *Error*\n${e.message}`, true)
     }
 }
 
