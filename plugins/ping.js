@@ -11,7 +11,7 @@ export default {
 
         const pingText = `👑 ─── 𝖨𝖳𝖲𝖴𝖪𝖨 𝖯𝖨𝖭𝖦 ─── 👑\n\n` +
                          `🌷 *Latencia del servidor:* \`${latency} ms\`\n` +
-                         `> ✨ _Mi sistema se encuentra estable y listo para recibir sus órdenes${isOwner ? ', Aarom' : ''}._ 🌟`
+                         `> ✨ _Mi sistema se encuentra estable y listo para recibir sus órdenes${isOwner ? ', 𝓐𝓪𝓻𝓸𝓶' : ''}._ 🌟`
 
         await conn.sendMessage(m.chat, {
             text: pingText,
