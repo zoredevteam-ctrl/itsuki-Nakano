@@ -1,8 +1,8 @@
 export default {
   command: ['cofre', 'suerte', 'regalo'],
   category: 'juegos',
-  run: async (client, m, { usedPrefix, command, args }) => {
-    // Configuración de la identidad Itsuki
+  run: async (client, m, args, usedPrefix, command) => {
+    // Configuración Itsuki Style 👑
     const contextInfo = {
       isForwarded: true,
       forwardingScore: 99,
@@ -47,9 +47,9 @@ export default {
               `> _¿Cuál desea abrir hoy?_`
 
     const buttons = [
-      { buttonId: `${usedPrefix + command} cofre1`, buttonText: { displayText: '🎁 Cofre de Madera' }, type: 1 },
-      { buttonId: `${usedPrefix + command} cofre2`, buttonText: { displayText: '🎁 Cofre de Plata' }, type: 1 },
-      { buttonId: `${usedPrefix + command} cofre3`, buttonText: { displayText: '🎁 Cofre Dorado' }, type: 1 }
+      { buttonId: `${usedPrefix + command} cofre1`, buttonText: { displayText: '🎁 Madera' }, type: 1 },
+      { buttonId: `${usedPrefix + command} cofre2`, buttonText: { displayText: '🎁 Plata' }, type: 1 },
+      { buttonId: `${usedPrefix + command} cofre3`, buttonText: { displayText: '🎁 Dorado' }, type: 1 }
     ]
 
     const buttonMessage = {
