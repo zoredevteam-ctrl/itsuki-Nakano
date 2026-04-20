@@ -84,6 +84,7 @@ let handler = async (m, { conn, command, text }) => {
         )
         await m.react('⏳')
         try {
+            // CORRECCIÓN: Se usa la función importada directamente
             const media = await downloadMediaMessage(q, 'buffer', {}, { reuploadRequest: conn.updateMediaMessage })
             const thumb = await global.getBannerThumb()
             const ctx   = global.getNewsletterCtx(thumb, `🖼️ ${global.botName||'Itsuki Nakano'}`, 'Sticker → Imagen 🌸')
@@ -110,7 +111,6 @@ let handler = async (m, { conn, command, text }) => {
         `🌸 Responde a una *imagen*, *video* o *GIF*~`
     )
 
-    // Pack name / author from text
     const parts  = (text || '').split('|').map(s => s.trim())
     const pack   = parts[0] || PACK_NAME
     const author = parts[1] || PACK_AUTHOR
@@ -118,15 +118,15 @@ let handler = async (m, { conn, command, text }) => {
     await m.react('⏳')
     try {
         let webpBuffer
+        // CORRECCIÓN GLOBAL: Se reemplaza conn.downloadMediaMessage por la función importada
+        const mediaBuffer = await downloadMediaMessage(quoted, 'buffer', {}, { reuploadRequest: conn.updateMediaMessage })
+
         if (stickerMsg) {
-            const buf = await conn.downloadMediaMessage(quoted)
-            webpBuffer = buf
+            webpBuffer = mediaBuffer
         } else if (gifMsg || videoMsg) {
-            const buf = await conn.downloadMediaMessage(quoted)
-            webpBuffer = await videoToWebp(buf)
+            webpBuffer = await videoToWebp(mediaBuffer)
         } else {
-            const buf = await conn.downloadMediaMessage(quoted)
-            webpBuffer = await imageToWebp(buf)
+            webpBuffer = await imageToWebp(mediaBuffer)
         }
 
         if (!webpBuffer || webpBuffer.length < 100) throw new Error('WebP vacío o corrupto')
@@ -137,7 +137,8 @@ let handler = async (m, { conn, command, text }) => {
     } catch (e) {
         await m.react('❌')
         let errMsg = `❌ *Error al crear sticker*\n\n⚠️ ${e.message}`
-        if (e.message.includes('ffmpeg')) errMsg += '\n_Instala ffmpeg: `apt install ffmpeg`_'
+        if (e.message.includes('ffmpeg')) errMsg += '\n_Instala ffmpeg: `apt install ffmpeg`_';
+        console.error(e)
         await sendStk(conn, m, errMsg, true)
     }
 }
