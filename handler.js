@@ -250,7 +250,7 @@ export const handler = async (m, conn, plugins) => {
                 : '> _Hmm, no encontré nada parecido..._ 🍀';
 
             const textoNoExiste = isOwner
-                ? `¡Aarom! El comando *${prefix + commandName}* no existe... pero no te preocupes, ¡voy a seguir aprendiendo! 🍀\nUsa *${prefix}menu* para ver todo lo que sé hacer~`
+                ? `¡Creador! El comando *${prefix + commandName}* no existe... pero no te preocupes, ¡voy a seguir aprendiendo! 🍀\nUsa *${prefix}menu* para ver todo lo que sé hacer~`
                 : `Mmm... el comando *${prefix + commandName}* no existe. ¡Pero no te rindas!\nUsa *${prefix}menu* y encontrarás lo que buscas 🍀`;
 
             const finalMessage = similares.length
