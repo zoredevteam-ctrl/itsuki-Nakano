@@ -113,7 +113,7 @@ con el mismo cuidado con el que estudio mis lecciones.
 > ꒰⌢ ʚ˚₊‧ ✎ ꒱ ❐
 
 ╔════ ❀ 𝐁𝐎𝐓 𝐈𝐍𝐅𝐎 ❀ ════╗
-• Creador: Aarom 👑
+• Creador: 𝓐𝓪𝓻𝓸𝓶 🧑🏻‍💻
 • Usuarios: ${totalreg.toLocaleString()}
 • Sub‑Bots: ${totalSub} / 30
 • Uptime: ${uptime}
