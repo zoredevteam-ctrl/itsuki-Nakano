@@ -52,7 +52,7 @@ let handler = async (m, { conn, usedPrefix, db }) => {
 
     // ── DATOS GLOBALES ────────────────────────────────────────────────────────
     const dbData   = db || database.data || {}
-    const users    = dbData.users  || {}
+    const users    = dbData.users   || {}
     const subbots  = dbData.subbots || {}
     const totalreg = Object.keys(users).length
     const totalSub = Object.keys(subbots).filter(k => subbots[k]?.connected).length
@@ -63,6 +63,9 @@ let handler = async (m, { conn, usedPrefix, db }) => {
     const userBank  = (userData.bank  || 0).toLocaleString()
     const userExp   = (userData.exp   || 0).toLocaleString()
     const userLevel = userData.level  || 1
+    const userRep   = (userData.reputacion || 0)
+    const userAmigos = (userData.amigos || []).length
+    const userTrofeos = (userData.trofeos || []).length
 
     const getRango = (lvl) => {
         if (lvl >= 50) return '🏆 Leyenda'
@@ -125,6 +128,9 @@ con el mismo cuidado con el que estudio mis lecciones.
 • Rango: ${rango}
 • Nivel: ${userLevel}
 • Top: ${rankText}
+• Reputación: ⭐ ${userRep}
+• Amigos: 💕 ${userAmigos}
+• Trofeos: 🏅 ${userTrofeos}
 ╚════ ❀ 🌷 ❀ ════╝
 
 ╔ ❀ 𝐋𝐈𝐒𝐓𝐀 𝐃𝐄 𝐂𝐎𝐌𝐀𝐍𝐃𝐎𝐒 ❀ ╗
@@ -136,95 +142,90 @@ con el mismo cuidado con el que estudio mis lecciones.
 > ➜ ${px}modoadmin / ${px}modoowner
 > ➜ ${px}report / ${px}bug
 
-❀ *MODERACIÓN* 
+❀ *MODERACIÓN*
 > ➜ ${px}warn / ${px}resetwarn / ${px}warns
 > ➜ ${px}mute [tiempo] / ${px}unmute
 > ➜ ${px}tempban @usuario [tiempo]
 > ➜ ${px}closegroup / ${px}opengroup
 > ➜ ${px}antilink / ${px}antispam
-> ➜ ${px}setprimary / ${px}removeprimary
 > ➜ ${px}welcome on/off
-> ➜ ${px}nsfw on/off
-> ➜ ${px}setedad / ${px}edadoff
-> ➜ ${px}cartaon / ${px}cartaoff
 
-❀ *GRUPOS* 
+❀ *GRUPOS*
 > ➜ ${px}kick / ${px}ban
 > ➜ ${px}tag / ${px}promover / ${px}degradar
 
-❀ *ECONOMÍA* 
-> ➜ ${px}daily / ${px}diario
-> ➜ ${px}cofre / ${px}chest
-> ➜ ${px}work / ${px}trabajar / ${px}chamba
-> ➜ ${px}minar / ${px}mine
-> ➜ ${px}crime / ${px}crimen
-> ➜ ${px}pesca / ${px}pescar / ${px}fish
-> ➜ ${px}mendigo / ${px}pedir / ${px}beg
-> ➜ ${px}rob / ${px}robar
-> ➜ ${px}slots / ${px}casino / ${px}ruleta
-> ➜ ${px}depositar / ${px}deposit
-> ➜ ${px}retirar / ${px}withdraw
-> ➜ ${px}bal / ${px}balance / ${px}saldo
-> ➜ ${px}top / ${px}ranking / ${px}baltop
-> ➜ ${px}lvl / ${px}nivel / ${px}level
-> ➜ ${px}donar / ${px}dar / ${px}transfer
-> ➜ ${px}prestamo / ${px}pagar / ${px}invertir
-> ➜ ${px}addcoins / ${px}addexp _(owner)_
+❀ *ECONOMÍA BASE*
+> ➜ ${px}daily / ${px}cofre
+> ➜ ${px}work / ${px}chamba / ${px}minar
+> ➜ ${px}crime / ${px}pesca / ${px}mendigo
+> ➜ ${px}rob / ${px}slots / ${px}casino
+> ➜ ${px}depositar / ${px}retirar
+> ➜ ${px}bal / ${px}top / ${px}lvl
+> ➜ ${px}donar / ${px}addcoins _(owner)_
 
-❀ *RPG* 
+❀ *ECONOMÍA AVANZADA*
+> ➜ ${px}prestamo / ${px}pagar
+> ➜ ${px}invertir / ${px}loteria
+> ➜ ${px}mercado / ${px}compraraccion
+> ➜ ${px}venderaccion / ${px}misacciones
+> ➜ ${px}robarexp
+
+❀ *RPG*
 > ➜ ${px}clases / ${px}elegirclase
-> ➜ ${px}perfil / ${px}dungeon
+> ➜ ${px}rpgperfil / ${px}dungeon
 > ➜ ${px}atacar / ${px}habilidad
-> ➜ ${px}curar / ${px}inventario / ${px}usar
-> ➜ ${px}pelear / ${px}tiendarpg
-> ➜ ${px}clan / ${px}misiones / ${px}reclamar
-> ➜ ${px}rpgtop
+> ➜ ${px}curar / ${px}rpgtop
 
-❀ *JUEGOS* 
-> ➜ ${px}trivia / ${px}triviatop
-> ➜ ${px}adivina / ${px}pista / ${px}rendirse
-> ➜ ${px}rruleta
+❀ *JUEGOS*
+> ➜ ${px}trivia / ${px}adivina / ${px}pista
+> ➜ ${px}rendirse / ${px}rruleta
+> ➜ ${px}ahorcado / ${px}rendirahor
+> ➜ ${px}ppt / ${px}dados / ${px}moneda
+> ➜ ${px}blackjack / ${px}pedir / ${px}plantarse
+> ➜ ${px}acertijo / ${px}rendirme
 
-❀ *SOCIAL* 
+❀ *SOCIAL*
 > ➜ ${px}casar / ${px}aceptar / ${px}divorcio
-> ➜ ${px}adoptar
-> ➜ ${px}duelo / ${px}aceptarduelo
-> ➜ ${px}carta / ${px}verificar
+> ➜ ${px}adoptar / ${px}duelo / ${px}carta
+> ➜ ${px}verificar / ${px}confesar
+> ➜ ${px}amistad / ${px}regalo
+> ➜ ${px}cumpleanos / ${px}rep
+> ➜ ${px}miperfil / ${px}trofeos / ${px}bio
 
-❀ *ANIME & REACCIONES* 
-> ➜ ${px}rw / ${px}miswaifu
+❀ *ANIME & REACCIONES*
 > ➜ ${px}kiss / ${px}hug / ${px}kill
 > ➜ ${px}push / ${px}dormir / ${px}triste
-> ➜ ${px}no / ${px}hola / ${px}borracho
-> ➜ ${px}neko / ${px}waifu / ${px}pat
+> ➜ ${px}pat / ${px}neko / ${px}waifu
+> ➜ ${px}husbando / ${px}quoteanime
+> ➜ ${px}buscaranime / ${px}personaje
+> ➜ ${px}animetop
 
-❀ *IA & CREATIVIDAD* 
-> ➜ ${px}ia <pregunta>
-> ➜ ${px}imagen <descripción>
+❀ *IA & CREATIVIDAD*
+> ➜ ${px}ia / ${px}chat / ${px}gpt
+> ➜ ${px}poema / ${px}historia / ${px}cuento
+> ➜ ${px}consejo / ${px}roast
+> ➜ ${px}completar / ${px}traducirx
+> ➜ ${px}clearchat
 
-❀ *MÍSTICA* 
-> ➜ ${px}horoscopo <signo>
-> ➜ ${px}tarot / ${px}prediccion
+❀ *INFORMACIÓN*
+> ➜ ${px}crypto / ${px}moneda / ${px}cambio
+> ➜ ${px}ip / ${px}color / ${px}pais
+> ➜ ${px}definir / ${px}tiempo / ${px}hora
+> ➜ ${px}pokedex / ${px}pokemon
 
-❀ *ESTADÍSTICAS* 
-> ➜ ${px}topgrupo / ${px}rankgrupo
-> ➜ ${px}miperfil / ${px}miactividad
-
-❀ *HERRAMIENTAS* 
-> ➜ ${px}clima <ciudad>
-> ➜ ${px}traducir <idioma> <texto>
+❀ *HERRAMIENTAS*
+> ➜ ${px}clima / ${px}traducir
 > ➜ ${px}calc / ${px}qr / ${px}wiki
-> ➜ ${px}pokedex / ${px}chiste / ${px}frase
+> ➜ ${px}chiste / ${px}frase
 
-❀ *DESCARGAS* 
+❀ *DESCARGAS*
 > ➜ ${px}play / ${px}playvid
-> ➜ ${px}letra / ${px}pin
 > ➜ ${px}enviartt <url tiktok>
 
-❀ *STICKERS* 
-> ➜ ${px}s / ${px}sticker
+❀ *STICKERS*
+> ➜ ${px}s / ${px}sticker / ${px}toimg
 
-❀ *SUB‑BOTS* 
+❀ *SUB‑BOTS*
 > ➜ ${px}code <número>
 > ➜ ${px}subbots / ${px}delsubbot
 > ➜ ${px}setnombre / ${px}setbanner
@@ -237,20 +238,20 @@ con paciencia y constancia."* ✍️✨
 🌺 *Si necesitas algo más, estaré aquí para ayudarte.*
 `.trim()
 
-    // ── ENVIAR (PDF falso — funciona en todos los WhatsApp) ───────────────────
+    // ── ENVIAR (PDF falso) ────────────────────────────────────────────────────
     const bannerBuffer = await getBannerBuffer(bannerSrc)
 
     try {
         await conn.sendMessage(m.chat, {
-            document:  bannerBuffer || Buffer.from(''),
-            mimetype:  'application/pdf',
-            fileName:  `『 ${nombreBot} Menu 』.pdf`,
+            document:   bannerBuffer || Buffer.from(''),
+            mimetype:   'application/pdf',
+            fileName:   `『 ${nombreBot} Menu 』.pdf`,
             fileLength: 2199023255552,
-            pageCount: 1,
-            caption:   txt,
-            mentions:  [m.sender],
+            pageCount:  1,
+            caption:    txt,
+            mentions:   [m.sender],
             contextInfo: {
-                isForwarded: true,
+                isForwarded:    true,
                 forwardingScore: 999,
                 externalAdReply: {
                     title:                 `🌟 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 𝐒𝐘𝐒𝐓𝐄𝐌`,
