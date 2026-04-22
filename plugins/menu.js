@@ -58,14 +58,18 @@ let handler = async (m, { conn, usedPrefix, db }) => {
     const totalSub = Object.keys(subbots).filter(k => subbots[k]?.connected).length
 
     // ── DATOS DEL USUARIO ─────────────────────────────────────────────────────
-    const userData  = users[sender] || {}
-    const userMoney = (userData.money || userData.limit || 0).toLocaleString()
-    const userBank  = (userData.bank  || 0).toLocaleString()
-    const userExp   = (userData.exp   || 0).toLocaleString()
-    const userLevel = userData.level  || 1
-    const userRep   = (userData.reputacion || 0)
-    const userAmigos = (userData.amigos || []).length
-    const userTrofeos = (userData.trofeos || []).length
+    const userData    = users[sender] || {}
+    const userMoney   = (userData.money  || 0).toLocaleString()
+    const userBank    = (userData.bank   || 0).toLocaleString()
+    const userExp     = (userData.exp    || 0).toLocaleString()
+    const userLevel   = userData.level   || 1
+    const userRep     = userData.reputacion || 0
+    const userAmigos  = (userData.amigos || []).length
+    const userTrofeos = (userData.trofeos|| []).length
+    const userHP      = userData.hp      || 100
+    const userMaxHP   = userData.maxHp   || 100
+    const userPokemon = (userData.pokemon|| []).length
+    const userHarem   = (userData.harem  || []).length
 
     const getRango = (lvl) => {
         if (lvl >= 50) return '🏆 Leyenda'
@@ -78,12 +82,11 @@ let handler = async (m, { conn, usedPrefix, db }) => {
     const rango = getRango(userLevel)
 
     const sortedUsers = Object.entries(users)
-        .map(([jid, u]) => ({ jid, total: (u.money || u.limit || 0) + (u.bank || 0) }))
+        .map(([jid, u]) => ({ jid, total: (u.money || 0) + (u.bank || 0) }))
         .sort((a, b) => b.total - a.total)
     const rankPos  = sortedUsers.findIndex(u => u.jid === sender) + 1
     const rankText = rankPos > 0 ? `#${rankPos} de ${totalreg}` : 'Sin ranking'
 
-    // ── PREFIJO ───────────────────────────────────────────────────────────────
     const px = usedPrefix || global.prefix || '#'
 
     // ── TEXTO ─────────────────────────────────────────────────────────────────
@@ -113,7 +116,7 @@ con el mismo cuidado con el que estudio mis lecciones.
 > ꒰⌢ ʚ˚₊‧ ✎ ꒱ ❐
 
 ╔════ ❀ 𝐁𝐎𝐓 𝐈𝐍𝐅𝐎 ❀ ════╗
-• Creador: 𝓐𝓪𝓻𝓸𝓶 🧑🏻‍💻
+• Creador: Aarom 👑
 • Usuarios: ${totalreg.toLocaleString()}
 • Sub‑Bots: ${totalSub} / 30
 • Uptime: ${uptime}
@@ -128,9 +131,12 @@ con el mismo cuidado con el que estudio mis lecciones.
 • Rango: ${rango}
 • Nivel: ${userLevel}
 • Top: ${rankText}
+• HP: ❤️ ${userHP}/${userMaxHP}
 • Reputación: ⭐ ${userRep}
 • Amigos: 💕 ${userAmigos}
 • Trofeos: 🏅 ${userTrofeos}
+• Pokémon: ⚡ ${userPokemon}
+• Harem: 🎴 ${userHarem}
 ╚════ ❀ 🌷 ❀ ════╝
 
 ╔ ❀ 𝐋𝐈𝐒𝐓𝐀 𝐃𝐄 𝐂𝐎𝐌𝐀𝐍𝐃𝐎𝐒 ❀ ╗
@@ -138,9 +144,7 @@ con el mismo cuidado con el que estudio mis lecciones.
 ❀ *SISTEMA*
 > ➜ ${px}ping / ${px}menu / ${px}help
 > ➜ ${px}owner / ${px}infobot
-> ➜ ${px}boton / ${px}botoff
-> ➜ ${px}modoadmin / ${px}modoowner
-> ➜ ${px}report / ${px}bug
+> ➜ ${px}leave / ${px}salir
 
 ❀ *MODERACIÓN*
 > ➜ ${px}warn / ${px}resetwarn / ${px}warns
@@ -151,8 +155,12 @@ con el mismo cuidado con el que estudio mis lecciones.
 > ➜ ${px}welcome on/off
 
 ❀ *GRUPOS*
-> ➜ ${px}kick / ${px}ban
+> ➜ ${px}kick / ${px}ban / ${px}add
 > ➜ ${px}tag / ${px}promover / ${px}degradar
+> ➜ ${px}admins / ${px}link / ${px}revoke
+> ➜ ${px}gpname / ${px}gpdesc / ${px}gpbanner
+> ➜ ${px}del / ${px}gp / ${px}inactivos
+> ➜ ${px}kickinactivos
 
 ❀ *ECONOMÍA BASE*
 > ➜ ${px}daily / ${px}cofre
@@ -164,11 +172,14 @@ con el mismo cuidado con el que estudio mis lecciones.
 > ➜ ${px}donar / ${px}addcoins _(owner)_
 
 ❀ *ECONOMÍA AVANZADA*
+> ➜ ${px}weekly / ${px}monthly
+> ➜ ${px}aventura / ${px}cazar / ${px}curar
+> ➜ ${px}coinflip / ${px}roulette
 > ➜ ${px}prestamo / ${px}pagar
 > ➜ ${px}invertir / ${px}loteria
 > ➜ ${px}mercado / ${px}compraraccion
 > ➜ ${px}venderaccion / ${px}misacciones
-> ➜ ${px}robarexp
+> ➜ ${px}robarexp / ${px}einfo / ${px}pay
 
 ❀ *RPG*
 > ➜ ${px}clases / ${px}elegirclase
@@ -179,17 +190,34 @@ con el mismo cuidado con el que estudio mis lecciones.
 ❀ *JUEGOS*
 > ➜ ${px}trivia / ${px}adivina / ${px}pista
 > ➜ ${px}rendirse / ${px}rruleta
-> ➜ ${px}ahorcado / ${px}rendirahor
-> ➜ ${px}ppt / ${px}dados / ${px}moneda
+> ➜ ${px}ahorcado / ${px}ppt / ${px}dados
+> ➜ ${px}moneda / ${px}acertijo
 > ➜ ${px}blackjack / ${px}pedir / ${px}plantarse
-> ➜ ${px}acertijo / ${px}rendirme
+
+❀ *POKÉMON* ⚡
+> ➜ ${px}pokemon / ${px}atrapar
+> ➜ ${px}mypoke / ${px}pokeinfo
+> ➜ ${px}pokepvp / ${px}pvp
+> ➜ ${px}sellpoke / ${px}pokeshop / ${px}buypoke
+> ➜ ${px}curarpokemon / ${px}regalarpokemon
+> ➜ ${px}historial / ${px}poketop / ${px}toppower
+> ➜ ${px}pokelist
+
+❀ *GACHA* 🎴
+> ➜ ${px}rw / ${px}roll / ${px}rollwaifu
+> ➜ ${px}claim / ${px}harem / ${px}waifus
+> ➜ ${px}charinfo / ${px}charimage
+> ➜ ${px}givechar / ${px}robwaifu
+> ➜ ${px}sell / ${px}haremshop / ${px}buycharacter
+> ➜ ${px}trade / ${px}aceptarint / ${px}rechazarint
+> ➜ ${px}gachainfo / ${px}serielist
+> ➜ ${px}setclaimmsg / ${px}delwaifu
 
 ❀ *SOCIAL*
 > ➜ ${px}casar / ${px}aceptar / ${px}divorcio
 > ➜ ${px}adoptar / ${px}duelo / ${px}carta
-> ➜ ${px}verificar / ${px}confesar
-> ➜ ${px}amistad / ${px}regalo
-> ➜ ${px}cumpleanos / ${px}rep
+> ➜ ${px}confesar / ${px}amistad / ${px}regalo
+> ➜ ${px}cumpleanos / ${px}rep / ${px}verificar
 > ➜ ${px}miperfil / ${px}trofeos / ${px}bio
 
 ❀ *ANIME & REACCIONES*
@@ -197,15 +225,21 @@ con el mismo cuidado con el que estudio mis lecciones.
 > ➜ ${px}push / ${px}dormir / ${px}triste
 > ➜ ${px}pat / ${px}neko / ${px}waifu
 > ➜ ${px}husbando / ${px}quoteanime
-> ➜ ${px}buscaranime / ${px}personaje
-> ➜ ${px}animetop
+> ➜ ${px}buscaranime / ${px}personaje / ${px}animetop
 
 ❀ *IA & CREATIVIDAD*
 > ➜ ${px}ia / ${px}chat / ${px}gpt
-> ➜ ${px}poema / ${px}historia / ${px}cuento
-> ➜ ${px}consejo / ${px}roast
-> ➜ ${px}completar / ${px}traducirx
+> ➜ ${px}poema / ${px}historia / ${px}consejo
+> ➜ ${px}roast / ${px}completar / ${px}traducirx
 > ➜ ${px}clearchat
+
+❀ *IA DIALECTOS* 🌍
+> ➜ ${px}itsuki _(español neutro)_
+> ➜ ${px}itsukipe 🇵🇪 _(peruana)_
+> ➜ ${px}itsukiar 🇦🇷 _(argentina)_
+> ➜ ${px}itsukimex 🇲🇽 _(mexicana)_
+> ➜ ${px}itsukipaisa 🇨🇴 _(paisa)_
+> ➜ ${px}itsukico 🇨🇴 _(colombiana)_
 
 ❀ *INFORMACIÓN*
 > ➜ ${px}crypto / ${px}moneda / ${px}cambio
@@ -214,9 +248,11 @@ con el mismo cuidado con el que estudio mis lecciones.
 > ➜ ${px}pokedex / ${px}pokemon
 
 ❀ *HERRAMIENTAS*
-> ➜ ${px}clima / ${px}traducir
-> ➜ ${px}calc / ${px}qr / ${px}wiki
-> ➜ ${px}chiste / ${px}frase
+> ➜ ${px}clima / ${px}traducir / ${px}calc
+> ➜ ${px}qr / ${px}wiki / ${px}chiste / ${px}frase
+> ➜ ${px}getpic / ${px}say / ${px}ssweb
+> ➜ ${px}ytsearch / ${px}google
+> ➜ ${px}letra / ${px}read
 
 ❀ *DESCARGAS*
 > ➜ ${px}play / ${px}playvid
@@ -251,7 +287,7 @@ con paciencia y constancia."* ✍️✨
             caption:    txt,
             mentions:   [m.sender],
             contextInfo: {
-                isForwarded:    true,
+                isForwarded:     true,
                 forwardingScore: 999,
                 externalAdReply: {
                     title:                 `🌟 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 𝐒𝐘𝐒𝐓𝐄𝐌`,
