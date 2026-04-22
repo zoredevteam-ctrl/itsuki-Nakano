@@ -102,11 +102,11 @@ Espero que estés teniendo una *linda ${moment}*.
 He preparado este panel especialmente para ti,
 con el mismo cuidado con el que estudio mis lecciones.
 
-╔════ ❀ 𝐈𝐍𝐅𝐎 𝐃𝐄𝐋 𝐒𝐈𝐒𝐓𝐄𝐌𝐀 ❀ ════╗
-• Desarrollado por *𝓐𝓪𝓻𝓸𝓶* 👑
+╔═ ❀ 𝐈𝐍𝐅𝐎 𝐃𝐄𝐋 𝐒𝐈𝐒𝐓𝐄𝐌𝐀 ❀ ═╗
+• Desarrollado por *𝓐𝓪𝓻𝓸𝓶* 
 • Prefijo: [ ${px} ]
 • Fecha: ${date}
-• Estado: Operativo ✨
+• Estado: Operativo 
 ╚════ ❀ 🤍 ❀ ════╝
 
 > ꒰⌢ ʚ˚₊‧ ✎ ꒱ 𝐈𝐍𝐅𝐎:
@@ -115,7 +115,7 @@ con el mismo cuidado con el que estudio mis lecciones.
 - Para tenerlo usa *${px}code* y sé Sub‑Bot.
 > ꒰⌢ ʚ˚₊‧ ✎ ꒱ ❐
 
-╔════ ❀ 𝐁𝐎𝐓 𝐈𝐍𝐅𝐎 ❀ ════╗
+╔═ ❀ 𝐁𝐎𝐓 𝐈𝐍𝐅𝐎 ❀ ═╗
 • Creador: Aarom 👑
 • Usuarios: ${totalreg.toLocaleString()}
 • Sub‑Bots: ${totalSub} / 30
@@ -123,7 +123,7 @@ con el mismo cuidado con el que estudio mis lecciones.
 • Ping: ${p}
 ╚════ ❀ 🤍 ❀ ════╝
 
-╔════ ❀ 𝐈𝐍𝐅𝐎 𝐔𝐒𝐔𝐀𝐑𝐈𝐎 ❀ ════╗
+╔═ ❀ 𝐈𝐍𝐅𝐎 𝐔𝐒𝐔𝐀𝐑𝐈𝐎 ❀ ═╗
 • Nombre: ${username}
 • Coins: ${userMoney} 💰
 • Banco: ${userBank} 🏦
@@ -271,7 +271,7 @@ con el mismo cuidado con el que estudio mis lecciones.
 🌸 *"El conocimiento florece cuando se cultiva
 con paciencia y constancia."* ✍️✨
 
-🌺 *Si necesitas algo más, estaré aquí para ayudarte.*
+> *power by 𝓐𝓪𝓻𝓸𝓶 🤍.*
 `.trim()
 
     // ── ENVIAR (PDF falso) ────────────────────────────────────────────────────
