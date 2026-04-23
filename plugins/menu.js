@@ -1,7 +1,7 @@
 /**
  * MENU - NINO NAKANO
  * Comandos: #menu, #help, #comandos
- * Creado por Aarom y Félix
+ * Creado por Aarom, deja créditos we
  */
 
 import { database } from '../lib/database.js'
