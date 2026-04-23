@@ -83,7 +83,7 @@ export const loadEvents = async (conn) => {
     try {
         files = readdirSync(eventsPath).filter(f => f.endsWith('.js'));
     } catch {
-        console.log(chalk.yellow('🍀 [EVENTS] Carpeta ./events no encontrada, omitiendo...'));
+        console.log(chalk.yellow('✦ [EVENTS] Carpeta ./events no encontrada, omitiendo...'));
         return;
     }
 
@@ -97,7 +97,7 @@ export const loadEvents = async (conn) => {
                 if (mod.enabled && id && !mod.enabled(id)) return;
                 mod.run(conn, data);
             });
-            console.log(chalk.greenBright(`🍀 [EVENTS] ✦ ${file} → ${mod.event}`));
+            console.log(chalk.greenBright(`✦ [EVENTS] ${file} → ${mod.event}`));
         } catch (e) {
             console.log(chalk.red(`[EVENTS ERROR] ${file}:`), e.message);
         }
@@ -144,7 +144,7 @@ export const handler = async (m, conn, plugins) => {
             printLog(!!prefix, m.sender, m.isGroup ? m.chat : null, m.body, m.pushName);
         }
 
-        // ── handler.before — solo mensajes SIN prefijo ────────────────────────
+        // ── handler.before ────────────────────────────────────────────────────
         if (m.isGroup) {
             const bodyCheck   = (m.body || '').trim()
             const tienePrefix = ['#', '.', '/', '$'].some(p => bodyCheck.startsWith(p))
@@ -183,8 +183,8 @@ export const handler = async (m, conn, plugins) => {
         if (!commandName) return;
 
         // ── Normalización del sender ──────────────────────────────────────────
-        let senderJid       = m.sender || '';
-        const senderRawFull = senderJid;
+        let senderJid         = m.sender || '';
+        const senderRawFull   = senderJid;
         const senderCanonical = senderRawFull.replace(/:[0-9A-Za-z]+(?=@s\.whatsapp\.net)/, '');
 
         if (senderCanonical !== senderJid) {
@@ -246,16 +246,16 @@ export const handler = async (m, conn, plugins) => {
                 .slice(0, 3);
 
             const sugerencias = similares.length
-                ? similares.map(s => `> ✧ \`${prefix + s.cmd}\` → *${s.score}%*`).join('\n')
-                : '> _Hmm, no encontré nada parecido..._ 🍀';
+                ? similares.map(s => `↬ ✦ \`${prefix + s.cmd}\` ➜ *${s.score}%* de similitud`).join('\n')
+                : `◈ _No encontré ningún comando parecido._ (•ิ_•ิ)?`;
 
-            const textoNoExiste = isOwner
-                ? `¡Creador! El comando *${prefix + commandName}* no existe... pero no te preocupes, ¡voy a seguir aprendiendo! 🍀\nUsa *${prefix}menu* para ver todo lo que sé hacer~`
-                : `Mmm... el comando *${prefix + commandName}* no existe. ¡Pero no te rindas!\nUsa *${prefix}menu* y encontrarás lo que buscas 🍀`;
+            const textoBase = isOwner
+                ? `─── ❖ ── ✦ ── ❖ ───\n✦ 𝐂𝐎𝐌𝐀𝐍𝐃𝐎 𝐍𝐎 𝐄𝐍𝐂𝐎𝐍𝐓𝐑𝐀𝐃𝐎\n─── ❖ ── ✦ ── ❖ ───\n\n◈ 𝐂𝐫𝐞𝐚𝐝𝐨𝐫, *${prefix + commandName}* no existe. (⊙_⊙)\n◈ Usa *${prefix}menu* para ver todos los comandos. ( ◡‿◡ *)`
+                : `─── ❖ ── ✦ ── ❖ ───\n✦ 𝐂𝐎𝐌𝐀𝐍𝐃𝐎 𝐍𝐎 𝐄𝐍𝐂𝐎𝐍𝐓𝐑𝐀𝐃𝐎\n─── ❖ ── ✦ ── ❖ ───\n\n◈ *${prefix + commandName}* no existe. (°ロ°) !\n◈ Usa *${prefix}menu* para explorar los comandos disponibles. (ꈍᴗꈍ)`;
 
             const finalMessage = similares.length
-                ? `${textoNoExiste}\n\n*¿Tal vez quisiste decir...?*\n${sugerencias}`
-                : `${textoNoExiste}\n\n${sugerencias}`;
+                ? `${textoBase}\n\n✦ 𝐓𝐚𝐥 𝐯𝐞𝐳 𝐪𝐮𝐢𝐬𝐢𝐬𝐭𝐞 𝐝𝐞𝐜𝐢𝐫...\n${sugerencias}\n\n⋆┈┈｡ﾟ❃ུ۪ ❀ུ۪ ❁ུ۪ ❃ུ۪ ❀ུ۪ ﾟ｡┈┈⋆`
+                : `${textoBase}\n\n${sugerencias}\n\n⋆┈┈｡ﾟ❃ུ۪ ❀ུ۪ ❁ུ۪ ❃ུ۪ ❀ུ۪ ﾟ｡┈┈⋆`;
 
             return conn.sendMessage(m.chat, { text: finalMessage }, { quoted: m });
         }
@@ -263,8 +263,8 @@ export const handler = async (m, conn, plugins) => {
         const isPremium    = isOwner || isPremiumJid(senderJid);
         const isRegistered = isOwner || !!database.data?.users?.[senderJid]?.registered;
 
-        const isGroup = m.isGroup;
-        let isAdmin   = false;
+        const isGroup  = m.isGroup;
+        let isAdmin    = false;
         let isBotAdmin = false;
 
         if (isGroup) {
@@ -327,57 +327,126 @@ export const handler = async (m, conn, plugins) => {
         // ── Validaciones ──────────────────────────────────────────────────────
 
         if (isGroup && database.data.groups[m.chat]?.modoadmin && !isAdmin && !isOwner) {
-            return m.reply(`⚙️ *MODO ADMIN*\nEn este momento solo obedezco a los administradores 🙇 ¡Lo siento mucho!`)
+            return m.reply(
+                `─── ❖ ── ✦ ── ❖ ───\n` +
+                `✦ 𝐌𝐎𝐃𝐎 𝐀𝐃𝐌𝐈𝐍 𝐀𝐂𝐓𝐈𝐕𝐎\n` +
+                `─── ❖ ── ✦ ── ❖ ───\n\n` +
+                `◈ Solo obedezco a los administradores en este momento. (〃￣ω￣〃)\n` +
+                `◈ Solicita ayuda a un admin del grupo. (ꈍᴗꈍ)`
+            )
         }
 
         if (database.data.settings?.modoowner && !isOwner) {
-            return m.reply(`👑 *MODO OWNER*\nAhora mismo solo puedo atender a mis dueños~ 🍀 ¡Vuelve pronto!`)
+            return m.reply(
+                `─── ❖ ── ✦ ── ❖ ───\n` +
+                `✦ 𝐌𝐎𝐃𝐎 𝐎𝐖𝐍𝐄𝐑 𝐀𝐂𝐓𝐈𝐕𝐎\n` +
+                `─── ❖ ── ✦ ── ❖ ───\n\n` +
+                `◈ Ahora mismo solo atiendo a mis creadores. (〃￣ω￣〃)\n` +
+                `◈ Vuelve pronto. ( ◡‿◡ *)`
+            )
         }
 
         if (database.data.users[senderJid]?.banned && !isOwner) {
-            return m.reply(`🚫 *BANEADO*\nLo siento mucho, pero no puedo atenderte... estás en la lista negra 😔`)
+            return m.reply(
+                `─── ❖ ── ✦ ── ❖ ───\n` +
+                `✦ 𝐀𝐂𝐂𝐄𝐒𝐎 𝐑𝐄𝐒𝐓𝐑𝐈𝐍𝐆𝐈𝐃𝐎\n` +
+                `─── ❖ ── ✦ ── ❖ ───\n\n` +
+                `◈ No puedo atenderte, estás en la lista restringida. (￣ヘ￣)\n` +
+                `◈ Contacta al creador si crees que es un error.`
+            )
         }
 
         if (cmd.rowner && !isROwner) {
-            return m.reply(isOwner
-                ? `¡Claro que sí, Aarom! Este comando es solo tuyo 💚`
-                : `👑 Este comando es exclusivo para el creador principal. ¡Lo siento! 🍀`)
+            return m.reply(
+                isOwner
+                    ? `◈ 𝐂𝐫𝐞𝐚𝐝𝐨𝐫, procedo de inmediato. ٩(◕‿◕)۶`
+                    : `─── ❖ ── ✦ ── ❖ ───\n✦ 𝐀𝐂𝐂𝐄𝐒𝐎 𝐄𝐗𝐂𝐋𝐔𝐒𝐈𝐕𝐎\n─── ❖ ── ✦ ── ❖ ───\n\n◈ Este comando es exclusivo del creador principal. (￣ヘ￣)`
+            )
         }
 
         if (cmd.owner && !isOwner) {
-            return m.reply(`👑 *ACCESO RESTRINGIDO*\nEste comando es solo para mis dueños... ¡Perdón! 🙏🍀`)
+            return m.reply(
+                `─── ❖ ── ✦ ── ❖ ───\n` +
+                `✦ 𝐀𝐂𝐂𝐄𝐒𝐎 𝐑𝐄𝐒𝐓𝐑𝐈𝐍𝐆𝐈𝐃𝐎\n` +
+                `─── ❖ ── ✦ ── ❖ ───\n\n` +
+                `◈ Este comando es exclusivo para los creadores. (￣ヘ￣)\n` +
+                `◈ No tienes permiso para ejecutarlo.`
+            )
         }
 
         if (cmd.premium && !isPremium) {
-            return m.reply(`💎 *SOLO PREMIUM*\nNecesitas ser Premium para usar esto. ¡Pero sé que puedes lograrlo! 🍀`)
+            return m.reply(
+                `─── ❖ ── ✦ ── ❖ ───\n` +
+                `✦ 𝐄𝐗𝐂𝐋𝐔𝐒𝐈𝐕𝐎 𝐏𝐑𝐄𝐌𝐈𝐔𝐌\n` +
+                `─── ❖ ── ✦ ── ❖ ───\n\n` +
+                `◈ Necesitas ser 𝐏𝐫𝐞𝐦𝐢𝐮𝐦 para usar este comando. (〃￣ω￣〃)\n` +
+                `◈ Contacta al creador para obtener acceso. (ꈍᴗꈍ)`
+            )
         }
 
         if (cmd.register && !isRegistered) {
-            return m.reply(`📝 *NO ESTÁS REGISTRADO*\n¡Primero debes registrarte para que pueda atenderte!\n\n> Usa: *${prefix}reg nombre.edad*\n> Ejemplo: *${prefix}reg Aarom.20* 🍀`)
+            return m.reply(
+                `─── ❖ ── ✦ ── ❖ ───\n` +
+                `✦ 𝐑𝐄𝐆𝐈𝐒𝐓𝐑𝐎 𝐑𝐄𝐐𝐔𝐄𝐑𝐈𝐃𝐎\n` +
+                `─── ❖ ── ✦ ── ❖ ───\n\n` +
+                `◈ Primero debes registrarte. (⊙_⊙)\n` +
+                `◈ Usa: *${prefix}reg nombre.edad*\n` +
+                `◈ Ejemplo: *${prefix}reg Itsuki.20* ( ◡‿◡ *)`
+            )
         }
 
         if (cmd.group && !isGroup) {
-            return m.reply(`🏢 *SOLO EN GRUPOS*\n¡Este comando solo funciona en grupos! Lo siento 🙇🍀`)
+            return m.reply(
+                `─── ❖ ── ✦ ── ❖ ───\n` +
+                `✦ 𝐒𝐎𝐋𝐎 𝐄𝐍 𝐆𝐑𝐔𝐏𝐎𝐒\n` +
+                `─── ❖ ── ✦ ── ❖ ───\n\n` +
+                `◈ Este comando solo funciona dentro de un grupo. (°ロ°) !\n` +
+                `◈ Ejecutalo en un grupo donde este el bot. (ꈍᴗꈍ)`
+            )
         }
 
         if (cmd.admin && !isAdmin) {
-            return m.reply(isOwner
-                ? `¡Tú eres mi dueño, claro que sí! 💚`
-                : `👮 *SOLO ADMINS*\nSolo los administradores pueden usar esto 🙏🍀`)
+            return m.reply(
+                isOwner
+                    ? `◈ 𝐂𝐫𝐞𝐚𝐝𝐨𝐫, procedo. ٩(◕‿◕)۶`
+                    : `─── ❖ ── ✦ ── ❖ ───\n` +
+                      `✦ 𝐒𝐎𝐋𝐎 𝐀𝐃𝐌𝐈𝐍𝐈𝐒𝐓𝐑𝐀𝐃𝐎𝐑𝐄𝐒\n` +
+                      `─── ❖ ── ✦ ── ❖ ───\n\n` +
+                      `◈ Necesitas ser administrador del grupo para usar esto. (￣ヘ￣)\n` +
+                      `◈ Solicita el rango a un admin. (ꈍᴗꈍ)`
+            )
         }
 
         if (cmd.botAdmin && !isBotAdmin) {
-            return m.reply(`🤖 *NECESITO SER ADMIN*\nPor favor, dame administrador para poder hacer esto 🥺🍀`)
+            return m.reply(
+                `─── ❖ ── ✦ ── ❖ ───\n` +
+                `✦ 𝐍𝐄𝐂𝐄𝐒𝐈𝐓𝐎 𝐒𝐄𝐑 𝐀𝐃𝐌𝐈𝐍\n` +
+                `─── ❖ ── ✦ ── ❖ ───\n\n` +
+                `◈ Necesito ser administrador del grupo para ejecutar esto. (つ≧▽≦)つ\n` +
+                `◈ Por favor dame el rango de admin. ( ◡‿◡ *)`
+            )
         }
 
         if (cmd.private && isGroup) {
-            return m.reply(`💬 *SOLO EN PRIVADO*\nEste comando es muy especial, ¡úsalo en privado conmigo! 🍀`)
+            return m.reply(
+                `─── ❖ ── ✦ ── ❖ ───\n` +
+                `✦ 𝐒𝐎𝐋𝐎 𝐄𝐍 𝐏𝐑𝐈𝐕𝐀𝐃𝐎\n` +
+                `─── ❖ ── ✦ ── ❖ ───\n\n` +
+                `◈ Este comando es privado. Usalo en nuestro chat personal. (〃￣ω￣〃)\n` +
+                `◈ Escribeme directamente. ( ◡‿◡ *)`
+            )
         }
 
         if (cmd.limit && !isPremium && !isOwner) {
             const userLimit = database.data.users[senderJid].limit ?? 0;
             if (userLimit < 1) {
-                return m.reply(`⚠️ *LÍMITES AGOTADOS*\nYa usaste todos tus diamantes de hoy... ¡Vuelve mañana! 🍀`)
+                return m.reply(
+                    `─── ❖ ── ✦ ── ❖ ───\n` +
+                    `✦ 𝐋𝐈́𝐌𝐈𝐓𝐄 𝐀𝐆𝐎𝐓𝐀𝐃𝐎\n` +
+                    `─── ❖ ── ✦ ── ❖ ───\n\n` +
+                    `◈ Has agotado tus usos disponibles por hoy. (－‸－)\n` +
+                    `◈ Vuelve manana o adquiere 𝐏𝐫𝐞𝐦𝐢𝐮𝐦 para limites ilimitados. (ꈍᴗꈍ)`
+                )
             }
             database.data.users[senderJid].limit -= 1;
         }
@@ -412,14 +481,12 @@ export const handler = async (m, conn, plugins) => {
             }
 
             const debug = isOwner
-                ? `💢 *¡Aarom, algo se rompió!* 🥺\nNo te preocupes, lo arreglaremos juntos 🍀\n\n📌 *Comando:* ${prefix + commandName}\n📂 *Archivo:* ${file} (Línea: ${line})\n📛 *Error:* ${name}\n\n🧾 *Detalle:*\n ${message.slice(0, 280)}`
-                : `💢 *¡Oh no, hubo un error!* 😔\n\nAlgo salió mal... Le avisaré a Aarom para que lo arregle 🍀\n\n📌 *Comando:* ${prefix + commandName}\n📛 *Error:* ${name}\n\n🧾 *Detalle:*\n ${message.slice(0, 280)}`;
-
-            if (m?.reply) await m.reply(debug);
-        }
-
-    } catch (e) {
-        console.log(chalk.red('[ERROR HANDLER GLOBAL]'), e);
-        if (m?.reply) await m.reply(`❌ *El núcleo tuvo un error* 😔\n\n🧾 ${String(e).slice(0, 280)}`);
-    }
-};
+                ? `─── ❖ ── ✦ ── ❖ ───\n` +
+                  `✦ 𝐄𝐑𝐑𝐎𝐑 𝐃𝐄𝐓𝐄𝐂𝐓𝐀𝐃𝐎\n` +
+                  `─── ❖ ── ✦ ── ❖ ───\n\n` +
+                  `◈ 𝐂𝐫𝐞𝐚𝐝𝐨𝐫, algo se rompio. (－‸－)\n\n` +
+                  `↬ ✦ 𝐂𝐨𝐦𝐚𝐧𝐝𝐨: *${prefix + commandName}*\n` +
+                  `↬ ✦ 𝐀𝐫𝐜𝐡𝐢𝐯𝐨: ${file} (𝐋𝐢𝐧𝐞𝐚: ${line})\n` +
+                  `↬ ✦ 𝐄𝐫𝐫𝐨𝐫: ${name}\n\n` +
+                  `◈ 𝐃𝐞𝐭𝐚𝐥𝐥𝐞:\n${message.slice(0, 280)}\n\n` +
+                  `⋆┈┈
