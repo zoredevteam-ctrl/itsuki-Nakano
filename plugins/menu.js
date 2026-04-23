@@ -91,12 +91,7 @@ let handler = async (m, { conn, usedPrefix, db }) => {
 
     // ── TEXTO ─────────────────────────────────────────────────────────────────
     const txt = `
-╔══════════════╗
-   ✦ 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 ✦
- « 𝐒𝐢𝐬𝐭𝐞𝐦𝐚 𝐅𝐥𝐨𝐫𝐚𝐥 𝐄𝐥𝐞𝐠𝐚𝐧𝐭𝐞 »
-╚════ ❀ 💫 ❀ ════╝
-
-👑 *¡𝐇𝐨𝐥𝐚! ${username}.*
+ *¡𝐇𝐨𝐥𝐚! ${username}.*
 Soy *${nombreBot}*, es un gusto verte de nuevo.
 Espero que estés teniendo una *linda ${moment}*.
 
