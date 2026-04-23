@@ -16,7 +16,6 @@ import {
   DisconnectReason
 } from '@whiskeysockets/baileys'
 import { handler } from './handler.js'
-import { reconnectAllSubBots } from './lib/subbot-manager.js'
 import { database } from './lib/database.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -31,11 +30,11 @@ const log = {
   error:   msg => console.log(chalk.bgRed.white.bold('  ERROR ')    + ' ' + chalk.redBright(msg))
 }
 
-const g1 = chalk.hex('#7CFC00')   // verde lima
-const g2 = chalk.hex('#ADFF2F')   // verde amarillento
-const g3 = chalk.hex('#228B22')   // verde oscuro
+const g1 = chalk.hex('#7CFC00')
+const g2 = chalk.hex('#ADFF2F')
+const g3 = chalk.hex('#228B22')
 
-// ─── BANNER ──────────────────────────────────────────────────────────────────
+// ─── BANNER ───────────────────────────────────────────────────────────────────
 const itsukiBanner = `
 ${g3('╔══════════════════════════════════════════════╗')}
 ${g3('║')}  ${g1('██╗████████╗███████╗██╗   ██╗██╗  ██╗██╗')}     ${g3('║')}
@@ -50,17 +49,6 @@ ${g3('║')}  ${chalk.white.bold('    Powered by  𝓐𝓪𝓻𝓸𝓶  |  Z0RT 
 ${g3('║')}  ${chalk.gray('  Version: ' + (global.botVersion || '1.0.0') + ' | Baileys 7.0.0-rc.9     ')}   ${g3('║')}
 ${g3('╚══════════════════════════════════════════════╝')}
 `
-
-// ─── HELPER: Banner como Buffer ───────────────────────────────────────────────
-const getBannerBuffer = async () => {
-  try {
-    const src = global.banner || ''
-    if (!src) return null
-    if (src.startsWith('data:image')) return Buffer.from(src.split(',')[1], 'base64')
-    const res = await fetch(src)
-    return Buffer.from(await res.arrayBuffer())
-  } catch { return null }
-}
 
 // ─── CARGA DE PLUGINS ─────────────────────────────────────────────────────────
 const plugins = new Map()
@@ -97,7 +85,6 @@ async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState(global.sessionName)
   const { version }          = await fetchLatestBaileysVersion()
 
-  // Selección de método (solo la primera vez)
   if (!methodCodeQR && !methodCode && !state.creds.registered && !opcion) {
     console.clear()
     console.log(itsukiBanner)
@@ -122,7 +109,7 @@ async function startBot() {
       creds: state.creds,
       keys:  makeCacheableSignalKeyStore(state.keys, pino({ level: 'silent' }))
     },
-    markOnlineOnConnect:       true,
+    markOnlineOnConnect:            true,
     generateHighQualityLinkPreview: true,
     getMessage: async () => ({ conversation: 'Itsuki Nakano está aquí.' })
   })
@@ -137,7 +124,6 @@ async function startBot() {
 
   conn.ev.on('creds.update', saveCreds)
 
-  // Vinculación por código numérico
   if ((opcion === '2' || methodCode) && !state.creds.registered) {
     setTimeout(async () => {
       try {
@@ -180,7 +166,7 @@ async function startBot() {
     }
   })
 
-  // ─── BIENVENIDA / DESPEDIDA — delega a plugins ────────────────────────────
+  // ─── BIENVENIDA / DESPEDIDA ───────────────────────────────────────────────
   conn.ev.on('group-participants.update', async (anu) => {
     try {
       for (const [, plugin] of plugins) {
@@ -197,7 +183,7 @@ async function startBot() {
     }
   })
 
-  // ─── PROCESAMIENTO DE MENSAJES ────────────────────────────────────────────
+  // ─── MENSAJES ─────────────────────────────────────────────────────────────
   conn.ev.on('messages.upsert', async ({ messages, type }) => {
     if (type !== 'notify') return
     const m = messages[0]
@@ -210,7 +196,7 @@ async function startBot() {
   })
 }
 
-// ─── ARRANQUE ────────────────────────────────────────────────────────────────
+// ─── ARRANQUE ─────────────────────────────────────────────────────────────────
 ;(async () => {
   await database.read()
 
@@ -220,6 +206,4 @@ async function startBot() {
   await loadPlugins()
   global.plugins = plugins
   await startBot()
-
-  await reconnectAllSubBots(database.data)
 })()
