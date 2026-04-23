@@ -1,7 +1,7 @@
 /**
- * MENU - ITSUKI NAKANO
+ * MENU - NINO NAKANO
  * Comandos: #menu, #help, #comandos
- * Z0RT SYSTEMS 🌸
+ * Creado por Aarom y Félix
  */
 
 import { database } from '../lib/database.js'
@@ -17,7 +17,7 @@ const getBannerBuffer = async (bannerSrc) => {
 }
 
 let handler = async (m, { conn, usedPrefix, db }) => {
-    const nombreBot = global.botName || 'Itsuki Nakano'
+    const nombreBot = global.botName || 'Nino Nakano'
     const bannerSrc = global.banner  || ''
     const canalLink = global.rcanal || ''
 
@@ -72,12 +72,12 @@ let handler = async (m, { conn, usedPrefix, db }) => {
     const userHarem   = (userData.harem  || []).length
 
     const getRango = (lvl) => {
-        if (lvl >= 50) return '🏆 Leyenda'
-        if (lvl >= 30) return '💎 Diamante'
-        if (lvl >= 20) return '🥇 Oro'
-        if (lvl >= 10) return '🥈 Plata'
-        if (lvl >= 5)  return '🥉 Bronce'
-        return '🌱 Novato'
+        if (lvl >= 50) return '✦ Leyenda'
+        if (lvl >= 30) return '✧ Diamante'
+        if (lvl >= 20) return '✩ Oro'
+        if (lvl >= 10) return '✪ Plata'
+        if (lvl >= 5)  return '✫ Bronce'
+        return '◈ Novato'
     }
     const rango = getRango(userLevel)
 
@@ -91,179 +91,175 @@ let handler = async (m, { conn, usedPrefix, db }) => {
 
     // ── TEXTO ─────────────────────────────────────────────────────────────────
     const txt = `
- *¡𝐇𝐨𝐥𝐚! ${username}.*
-Soy *${nombreBot}*, es un gusto verte de nuevo.
-Espero que estés teniendo una *linda ${moment}*.
+『 𝐇𝐨𝐥𝐚 ${username} 』(✿◠‿◠)
 
-╔═ ❀ 𝐈𝐍𝐅𝐎 𝐃𝐄𝐋 𝐒𝐈𝐒𝐓𝐄𝐌𝐀 ❀ ═╗
-• Desarrollado por *𝓐𝓪𝓻𝓸𝓶* 
-• Prefijo: [ ${px} ]
-• Fecha: ${date}
-• Estado: Operativo 
-╚════ ❀ 🤍 ❀ ════╝
+Soy *${nombreBot}*, es un gusto verte por aquí.
+Espero que estés teniendo una linda ${moment}. ( ˶ˆ 弹性 ˆ˵ )
 
-> ꒰⌢ ʚ˚₊‧ ✎ ꒱ 𝐈𝐍𝐅𝐎:
-- ${nombreBot} es un bot privado.
-- El bot principal *no se une a grupos*.
-- Para tenerlo usa *${px}code* y sé Sub‑Bot.
-> ꒰⌢ ʚ˚₊‧ ✎ ꒱ ❐
+─── ❖ ── ✦ ── ❖ ───
+「 𝐈𝐍𝐅𝐎 𝐃𝐄𝐋 𝐒𝐈𝐒𝐓𝐄𝐌𝐀 」
+◈ Desarrollado por: *𝓐𝓪𝓻𝓸𝓶*
+◈ Prefijo: ﹝ ${px} ﹞
+◈ Fecha: ${date}
+◈ Estado: Operativo (ꈍᴗꈍ)
+─── ❖ ── ✦ ── ❖ ───
 
-╔═ ❀ 𝐁𝐎𝐓 𝐈𝐍𝐅𝐎 ❀ ═╗
-• Creador: Aarom 
-• Usuarios: ${totalreg.toLocaleString()}
-• Sub‑Bots: ${totalSub} / 30
-• Uptime: ${uptime}
-• Ping: ${p}
-╚════ ❀ 🤍 ❀ ════╝
+> ⋆┈┈｡ﾟ❃ུ۪ ❀ུ۪ ❁ུ۪ ❃ུ۪ ❀ུ۪ ﾟ｡┈┈⋆
+> ↬ ${nombreBot} es un bot privado.
+> ↬ El bot principal no se une a grupos.
+> ↬ Para tenerlo usa ${px}code y sé Sub‑Bot.
+> ⋆┈┈｡ﾟ❃ུ۪ ❀ུ۪ ❁ུ۪ ❃ུ۪ ❀ུ۪ ﾟ｡┈┈⋆
 
-╔═ ❀ 𝐈𝐍𝐅𝐎 𝐔𝐒𝐔𝐀𝐑𝐈𝐎 ❀ ═╗
-• Nombre: ${username}
-• Coins: ${userMoney} 
-• Banco: ${userBank} 
-• Exp: ${userExp} 
-• Rango: ${rango}
-• Nivel: ${userLevel}
-• Top: ${rankText}
-• HP:  ${userHP}/${userMaxHP}
-• Reputación:  ${userRep}
-• Amigos:  ${userAmigos}
-• Trofeos:  ${userTrofeos}
-• Pokémon:  ${userPokemon}
-• Harem:  ${userHarem}
-╚════ ❀ 🌟 ❀ ════╝
+『 𝐁𝐎𝐓 𝐈𝐍𝐅𝐎 』
+✦ Usuarios: ${totalreg.toLocaleString()}
+✦ Sub‑Bots: ${totalSub} / 30
+✦ Uptime: ${uptime}
+✦ Ping: ${p}
 
-╔ ❀ 𝐋𝐈𝐒𝐓𝐀 𝐃𝐄 𝐂𝐎𝐌𝐀𝐍𝐃𝐎𝐒 ❀ ╗
+『 𝐈𝐍𝐅𝐎 𝐔𝐒𝐔𝐀𝐑𝐈𝐎 』
+✧ Nombre: ${username}
+✧ Coins: ${userMoney} 
+✧ Banco: ${userBank} 
+✧ Exp: ${userExp} 
+✧ Rango: ${rango}
+✧ Nivel: ${userLevel}
+✧ Top: ${rankText}
+✧ HP: [████████▒▒] ${userHP}/${userMaxHP}
+✧ Reputación: ${userRep}
+✧ Amigos: ${userAmigos}
+✧ Trofeos: ${userTrofeos}
+✧ Pokémon: ${userPokemon}
+✧ Harem: ${userHarem}
+─── ❖ ── ✦ ── ❖ ───
 
-❀ *SISTEMA*
-> ➜ ${px}ping / ${px}menu / ${px}help
-> ➜ ${px}owner / ${px}infobot
-> ➜ ${px}leave / ${px}salir
+『 𝐋𝐈𝐒𝐓𝐀 𝐃𝐄 𝐂𝐎𝐌𝐀𝐍𝐃𝐎𝐒 』
 
-❀ *MODERACIÓN*
-> ➜ ${px}warn / ${px}resetwarn / ${px}warns
-> ➜ ${px}mute [tiempo] / ${px}unmute
-> ➜ ${px}tempban @usuario [tiempo]
-> ➜ ${px}closegroup / ${px}opengroup
-> ➜ ${px}antilink / ${px}antispam
-> ➜ ${px}welcome on/off
+❀ 𝐒𝐈𝐒𝐓𝐄𝐌𝐀 (｡◕‿◕｡)
+↬ ${px}ping ┊ latencia del bot
+↬ ${px}menu ┊ abre este menú
+↬ ${px}owner ┊ info de creadores
+↬ ${px}leave ┊ el bot sale del grupo
 
-❀ *GRUPOS*
-> ➜ ${px}kick / ${px}ban / ${px}add
-> ➜ ${px}tag / ${px}promover / ${px}degradar
-> ➜ ${px}admins / ${px}link / ${px}revoke
-> ➜ ${px}gpname / ${px}gpdesc / ${px}gpbanner
-> ➜ ${px}del / ${px}gp / ${px}inactivos
-> ➜ ${px}kickinactivos
+❀ 𝐌𝐎𝐃𝐄𝐑𝐀𝐂𝐈𝐎́𝐍 (－‸－)
+↬ ${px}warn / ${px}resetwarn / ${px}warns
+↬ ${px}mute [tiempo] / ${px}unmute
+↬ ${px}tempban @usuario [tiempo]
+↬ ${px}closegroup / ${px}opengroup
+↬ ${px}antilink / ${px}antispam
+↬ ${px}welcome on/off
 
-❀ *ECONOMÍA BASE*
-> ➜ ${px}daily / ${px}cofre
-> ➜ ${px}work / ${px}chamba / ${px}minar
-> ➜ ${px}crime / ${px}pesca / ${px}mendigo
-> ➜ ${px}rob / ${px}slots / ${px}casino
-> ➜ ${px}depositar / ${px}retirar
-> ➜ ${px}bal / ${px}top / ${px}lvl
-> ➜ ${px}donar / ${px}addcoins _(owner)_
+❀ 𝐆𝐑𝐔𝐏𝐎𝐒 ( ◡‿◡ *)
+↬ ${px}kick / ${px}ban / ${px}add
+↬ ${px}tag / ${px}promover / ${px}degradar
+↬ ${px}admins / ${px}link / ${px}revoke
+↬ ${px}gpname / ${px}gpdesc / ${px}gpbanner
+↬ ${px}del / ${px}gp / ${px}inactivos
 
-❀ *ECONOMÍA AVANZADA*
-> ➜ ${px}weekly / ${px}monthly
-> ➜ ${px}aventura / ${px}cazar / ${px}curar
-> ➜ ${px}coinflip / ${px}roulette
-> ➜ ${px}prestamo / ${px}pagar
-> ➜ ${px}invertir / ${px}loteria
-> ➜ ${px}mercado / ${px}compraraccion
-> ➜ ${px}venderaccion / ${px}misacciones
-> ➜ ${px}robarexp / ${px}einfo / ${px}pay
+❀ 𝐄𝐂𝐎𝐍𝐎𝐌𝐈́𝐀 𝐁𝐀𝐒𝐄 ٩(◕‿◕)۶
+↬ ${px}chamba ┊ sirve para trabajar y ganar coins (✿◠‿◠)
+↬ ${px}daily ┊ reclama tu premio diario
+↬ ${px}work / ${px}minar
+↬ ${px}crime / ${px}pesca / ${px}mendigo
+↬ ${px}rob / ${px}slots / ${px}casino
+↬ ${px}depositar / ${px}retirar
+↬ ${px}bal / ${px}top / ${px}lvl
+↬ ${px}donar / ${px}addcoins _(owner)_
 
-❀ *RPG*
-> ➜ ${px}clases / ${px}elegirclase
-> ➜ ${px}rpgperfil / ${px}dungeon
-> ➜ ${px}atacar / ${px}habilidad
-> ➜ ${px}curar / ${px}rpgtop
+❀ 𝐄𝐂𝐎𝐍𝐎𝐌𝐈́𝐀 𝐀𝐕𝐀𝐍𝐙𝐀𝐃𝐀 ✦
+↬ ${px}weekly / ${px}monthly
+↬ ${px}aventura / ${px}cazar / ${px}curar
+↬ ${px}coinflip / ${px}roulette
+↬ ${px}prestamo / ${px}pagar
+↬ ${px}invertir / ${px}loteria
+↬ ${px}mercado / ${px}compraraccion
+↬ ${px}venderaccion / ${px}misacciones
+↬ ${px}robarexp / ${px}einfo / ${px}pay
 
-❀ *JUEGOS*
-> ➜ ${px}trivia / ${px}adivina / ${px}pista
-> ➜ ${px}rendirse / ${px}rruleta
-> ➜ ${px}ahorcado / ${px}ppt / ${px}dados
-> ➜ ${px}moneda / ${px}acertijo
-> ➜ ${px}blackjack / ${px}pedir / ${px}plantarse
+❀ 𝐑𝐏𝐆 ⚔︎
+↬ ${px}clases / ${px}elegirclase
+↬ ${px}rpgperfil / ${px}dungeon
+↬ ${px}atacar / ${px}habilidad
+↬ ${px}curar / ${px}rpgtop
 
-❀ *POKÉMON* 
-> ➜ ${px}pokemon / ${px}atrapar
-> ➜ ${px}mypoke / ${px}pokeinfo
-> ➜ ${px}pokepvp / ${px}pvp
-> ➜ ${px}sellpoke / ${px}pokeshop / ${px}buypoke
-> ➜ ${px}curarpokemon / ${px}regalarpokemon
-> ➜ ${px}historial / ${px}poketop / ${px}toppower
-> ➜ ${px}pokelist
+❀ 𝐉𝐔𝐄𝐆𝐎𝐒 ✧
+↬ ${px}trivia / ${px}adivina / ${px}pista
+↬ ${px}rendirse / ${px}rruleta
+↬ ${px}ahorcado / ${px}ppt / ${px}dados
+↬ ${px}moneda / ${px}acertijo
+↬ ${px}blackjack / ${px}pedir / ${px}plantarse
 
-❀ *GACHA* 
-> ➜ ${px}rw / ${px}roll / ${px}rollwaifu
-> ➜ ${px}claim / ${px}harem / ${px}waifus
-> ➜ ${px}charinfo / ${px}charimage
-> ➜ ${px}givechar / ${px}robwaifu
-> ➜ ${px}sell / ${px}haremshop / ${px}buycharacter
-> ➜ ${px}trade / ${px}aceptarint / ${px}rechazarint
-> ➜ ${px}gachainfo / ${px}serielist
-> ➜ ${px}setclaimmsg / ${px}delwaifu
+❀ 𝐏𝐎𝐊𝐄́𝐌𝐎𝐍 ◓
+↬ ${px}pokemon / ${px}atrapar
+↬ ${px}mypoke / ${px}pokeinfo
+↬ ${px}pokepvp / ${px}pvp
+↬ ${px}sellpoke / ${px}pokeshop / ${px}buypoke
+↬ ${px}curarpokemon / ${px}regalarpokemon
+↬ ${px}historial / ${px}poketop / ${px}toppower
 
-❀ *SOCIAL*
-> ➜ ${px}casar / ${px}aceptar / ${px}divorcio
-> ➜ ${px}adoptar / ${px}duelo / ${px}carta
-> ➜ ${px}confesar / ${px}amistad / ${px}regalo
-> ➜ ${px}cumpleanos / ${px}rep / ${px}verificar
-> ➜ ${px}miperfil / ${px}trofeos / ${px}bio
+❀ 𝐆𝐀𝐂𝐇𝐀 (〃￣ω￣〃)
+↬ ${px}rw / ${px}roll / ${px}rollwaifu
+↬ ${px}claim / ${px}harem / ${px}waifus
+↬ ${px}charinfo / ${px}charimage
+↬ ${px}givechar / ${px}robwaifu
+↬ ${px}sell / ${px}haremshop / ${px}buycharacter
+↬ ${px}trade / ${px}aceptarint / ${px}rechazarint
 
-❀ *ANIME & REACCIONES*
-> ➜ ${px}kiss / ${px}hug / ${px}kill
-> ➜ ${px}push / ${px}dormir / ${px}triste
-> ➜ ${px}pat / ${px}neko / ${px}waifu
-> ➜ ${px}husbando / ${px}quoteanime
-> ➜ ${px}buscaranime / ${px}personaje / ${px}animetop
+❀ 𝐒𝐎𝐂𝐈𝐀𝐋 ♡
+↬ ${px}casar / ${px}aceptar / ${px}divorcio
+↬ ${px}adoptar / ${px}duelo / ${px}carta
+↬ ${px}confesar / ${px}amistad / ${px}regalo
+↬ ${px}cumpleanos / ${px}rep / ${px}verificar
+↬ ${px}miperfil / ${px}trofeos / ${px}bio
 
-❀ *IA & CREATIVIDAD*
-> ➜ ${px}ia / ${px}chat / ${px}gpt
-> ➜ ${px}poema / ${px}historia / ${px}consejo
-> ➜ ${px}roast / ${px}completar / ${px}traducirx
-> ➜ ${px}clearchat
+❀ 𝐀𝐍𝐈𝐌𝐄 & 𝐑𝐄𝐀𝐂𝐂𝐈𝐎𝐍𝐄𝐒 ✩
+↬ ${px}kiss / ${px}hug / ${px}kill
+↬ ${px}push / ${px}dormir / ${px}triste
+↬ ${px}pat / ${px}neko / ${px}waifu
+↬ ${px}husbando / ${px}quoteanime
+↬ ${px}buscaranime / ${px}personaje
 
-❀ *IA DIALECTOS* 🌍
-> ➜ ${px}itsuki _(español neutro)_
-> ➜ ${px}itsukipe 🇵🇪 _(peruana)_
-> ➜ ${px}itsukiar 🇦🇷 _(argentina)_
-> ➜ ${px}itsukimex 🇲🇽 _(mexicana)_
-> ➜ ${px}itsukipaisa 🇨🇴 _(paisa)_
-> ➜ ${px}itsukico 🇨🇴 _(colombiana)_
+❀ 𝐈𝐀 & 𝐂𝐑𝐄𝐀𝐓𝐈𝐕𝐈𝐃𝐀𝐃 ⌨
+↬ ${px}ia / ${px}chat / ${px}gpt
+↬ ${px}poema / ${px}historia / ${px}consejo
+↬ ${px}roast / ${px}completar / ${px}traducirx
+↬ ${px}clearchat
 
-❀ *INFORMACIÓN*
-> ➜ ${px}crypto / ${px}moneda / ${px}cambio
-> ➜ ${px}ip / ${px}color / ${px}pais
-> ➜ ${px}definir / ${px}tiempo / ${px}hora
-> ➜ ${px}pokedex / ${px}pokemon
+❀ 𝐈𝐀 𝐃𝐈𝐀𝐋𝐄𝐂𝐓𝐎𝐒 (O_O)
+↬ ${px}nino ┊ _(español neutro)_
+↬ ${px}ninope ┊ _(peruana)_
+↬ ${px}ninoar ┊ _(argentina)_
+↬ ${px}ninomex ┊ _(mexicana)_
+↬ ${px}ninopaisa ┊ _(paisa)_
+↬ ${px}ninoco ┊ _(colombiana)_
 
-❀ *HERRAMIENTAS*
-> ➜ ${px}clima / ${px}traducir / ${px}calc
-> ➜ ${px}qr / ${px}wiki / ${px}chiste / ${px}frase
-> ➜ ${px}getpic / ${px}say / ${px}ssweb
-> ➜ ${px}ytsearch / ${px}google
-> ➜ ${px}letra / ${px}read
+❀ 𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐂𝐈𝐎́𝐍 ◈
+↬ ${px}crypto / ${px}moneda / ${px}cambio
+↬ ${px}ip / ${px}color / ${px}pais
+↬ ${px}definir / ${px}tiempo / ${px}hora
+↬ ${px}pokedex / ${px}pokemon
 
-❀ *DESCARGAS*
-> ➜ ${px}play / ${px}playvid
-> ➜ ${px}enviartt <url tiktok>
+❀ 𝐇𝐄𝐑𝐑𝐀𝐌𝐈𝐄𝐍𝐓𝐀𝐒 
+↬ ${px}clima / ${px}traducir / ${px}calc
+↬ ${px}qr / ${px}wiki / ${px}chiste / ${px}frase
+↬ ${px}getpic / ${px}say / ${px}ssweb
+↬ ${px}ytsearch / ${px}google
+↬ ${px}letra / ${px}read
 
-❀ *STICKERS*
-> ➜ ${px}s / ${px}sticker / ${px}toimg
+❀ 𝐃𝐄𝐒𝐂𝐀𝐑𝐆𝐀𝐒 ↧
+↬ ${px}play / ${px}playvid
+↬ ${px}enviartt <url tiktok>
 
-❀ *SUB‑BOTS*
-> ➜ ${px}code <número>
-> ➜ ${px}subbots / ${px}delsubbot
-> ➜ ${px}setnombre / ${px}setbanner
+❀ 𝐒𝐓𝐈𝐂𝐊𝐄𝐑𝐒 ✦
+↬ ${px}s / ${px}sticker / ${px}toimg
 
-╚════ ❀ 🌟 ❀ ════╝
+❀ 𝐒𝐔𝐁‑𝐁𝐎𝐓𝐒 ↬
+↬ ${px}code <número>
+↬ ${px}subbots / ${px}delsubbot
+↬ ${px}setnombre / ${px}setbanner
 
-> *"Bot en base alpha se espera que haya errores que se irán solucionando con el tiempo."* 
-
-> *power by 𝓐𝓪𝓻𝓸𝓶 🤍.*
+─── ❖ ── ✦ ── ❖ ───
+> ✦ Bot en fase alpha, se espera que haya errores que se irán solucionando.
+> ✦ Power by 𝓐𝓪𝓻𝓸𝓶 ✦
 `.trim()
 
     // ── ENVIAR (PDF falso) ────────────────────────────────────────────────────
@@ -282,8 +278,8 @@ Espero que estés teniendo una *linda ${moment}*.
                 isForwarded:     true,
                 forwardingScore: 999,
                 externalAdReply: {
-                    title:                 `🌟 𝐈𝐓𝐒𝐔𝐊𝐈 𝐍𝐀𝐊𝐀𝐍𝐎 𝐒𝐘𝐒𝐓𝐄𝐌`,
-                    body:                  `By: 𝓐𝓪𝓻𝓸𝓶 👑`,
+                    title:                 `✦ 𝐍𝐈𝐍𝐎 𝐍𝐀𝐊𝐀𝐍𝐎 𝐒𝐘𝐒𝐓𝐄𝐌 ✦`,
+                    body:                  `By: 𝓐𝓪𝓻𝓸𝓶 ✦`,
                     mediaType:             1,
                     thumbnail:             bannerBuffer,
                     renderLargerThumbnail: true,
