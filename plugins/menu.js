@@ -99,8 +99,6 @@ let handler = async (m, { conn, usedPrefix, db }) => {
 👑 *¡𝐇𝐨𝐥𝐚! ${username}.*
 Soy *${nombreBot}*, es un gusto verte de nuevo.
 Espero que estés teniendo una *linda ${moment}*.
-He preparado este panel especialmente para ti,
-con el mismo cuidado con el que estudio mis lecciones.
 
 ╔═ ❀ 𝐈𝐍𝐅𝐎 𝐃𝐄𝐋 𝐒𝐈𝐒𝐓𝐄𝐌𝐀 ❀ ═╗
 • Desarrollado por *𝓐𝓪𝓻𝓸𝓶* 
@@ -116,7 +114,7 @@ con el mismo cuidado con el que estudio mis lecciones.
 > ꒰⌢ ʚ˚₊‧ ✎ ꒱ ❐
 
 ╔═ ❀ 𝐁𝐎𝐓 𝐈𝐍𝐅𝐎 ❀ ═╗
-• Creador: Aarom 👑
+• Creador: Aarom 
 • Usuarios: ${totalreg.toLocaleString()}
 • Sub‑Bots: ${totalSub} / 30
 • Uptime: ${uptime}
@@ -125,19 +123,19 @@ con el mismo cuidado con el que estudio mis lecciones.
 
 ╔═ ❀ 𝐈𝐍𝐅𝐎 𝐔𝐒𝐔𝐀𝐑𝐈𝐎 ❀ ═╗
 • Nombre: ${username}
-• Coins: ${userMoney} 💰
-• Banco: ${userBank} 🏦
-• Exp: ${userExp} ✨
+• Coins: ${userMoney} 
+• Banco: ${userBank} 
+• Exp: ${userExp} 
 • Rango: ${rango}
 • Nivel: ${userLevel}
 • Top: ${rankText}
-• HP: ❤️ ${userHP}/${userMaxHP}
-• Reputación: ⭐ ${userRep}
-• Amigos: 💕 ${userAmigos}
-• Trofeos: 🏅 ${userTrofeos}
-• Pokémon: ⚡ ${userPokemon}
-• Harem: 🎴 ${userHarem}
-╚════ ❀ 🌷 ❀ ════╝
+• HP:  ${userHP}/${userMaxHP}
+• Reputación:  ${userRep}
+• Amigos:  ${userAmigos}
+• Trofeos:  ${userTrofeos}
+• Pokémon:  ${userPokemon}
+• Harem:  ${userHarem}
+╚════ ❀ 🌟 ❀ ════╝
 
 ╔ ❀ 𝐋𝐈𝐒𝐓𝐀 𝐃𝐄 𝐂𝐎𝐌𝐀𝐍𝐃𝐎𝐒 ❀ ╗
 
@@ -194,7 +192,7 @@ con el mismo cuidado con el que estudio mis lecciones.
 > ➜ ${px}moneda / ${px}acertijo
 > ➜ ${px}blackjack / ${px}pedir / ${px}plantarse
 
-❀ *POKÉMON* ⚡
+❀ *POKÉMON* 
 > ➜ ${px}pokemon / ${px}atrapar
 > ➜ ${px}mypoke / ${px}pokeinfo
 > ➜ ${px}pokepvp / ${px}pvp
@@ -203,7 +201,7 @@ con el mismo cuidado con el que estudio mis lecciones.
 > ➜ ${px}historial / ${px}poketop / ${px}toppower
 > ➜ ${px}pokelist
 
-❀ *GACHA* 🎴
+❀ *GACHA* 
 > ➜ ${px}rw / ${px}roll / ${px}rollwaifu
 > ➜ ${px}claim / ${px}harem / ${px}waifus
 > ➜ ${px}charinfo / ${px}charimage
@@ -268,8 +266,7 @@ con el mismo cuidado con el que estudio mis lecciones.
 
 ╚════ ❀ 🌟 ❀ ════╝
 
-🌸 *"El conocimiento florece cuando se cultiva
-con paciencia y constancia."* ✍️✨
+> *"Bot en base alpha se espera que haya errores que se irán solucionando con el tiempo."* 
 
 > *power by 𝓐𝓪𝓻𝓸𝓶 🤍.*
 `.trim()
