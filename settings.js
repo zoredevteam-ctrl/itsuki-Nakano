@@ -32,7 +32,7 @@ global.newsletterJid  = '120363404822730259@newsletter'
 global.newsletterName = '𓆩 ✧ 𝐈𝐭𝐬𝐮𝐤𝐢 ⌁ 𝑼𝒑𝒅𝒂𝒕𝒆𝒔 ✧ 𓆪'
 
 // Banner principal
-global.banner = 'https://upload.yotsuba.giize.com/u/FkriIp0S.webp'
+global.banner = 'https://causas-files.vercel.app/fl/q2hx.jpg'
 
 // ————————————————————————————————————————————————————————————————————
 // BANNER CONTEXTUAL 🍀
