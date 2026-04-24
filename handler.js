@@ -489,5 +489,5 @@ export const handler = async (m, conn, plugins) => {
     `➤ Archivo: ${file} (Línea: ${line})\n` +
     `➤ Error: ${name}\n\n` +
     `◇ Detalle:\n${message.slice(0, 280)}\n\n` +
-    '──────'
+'──────'
   : '';
