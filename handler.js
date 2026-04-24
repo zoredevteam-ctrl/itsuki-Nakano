@@ -481,12 +481,13 @@ export const handler = async (m, conn, plugins) => {
             }
 
             const debug = isOwner
-                ? `─── ❖ ── ✦ ── ❖ ───\n` +
-                  `✦ 𝐄𝐑𝐑𝐎𝐑 𝐃𝐄𝐓𝐄𝐂𝐓𝐀𝐃𝐎\n` +
-                  `─── ❖ ── ✦ ── ❖ ───\n\n` +
-                  `◈ 𝐂𝐫𝐞𝐚𝐝𝐨𝐫, algo se rompio. (－‸－)\n\n` +
-                  `↬ ✦ 𝐂𝐨𝐦𝐚𝐧𝐝𝐨: *${prefix + commandName}*\n` +
-                  `↬ ✦ 𝐀𝐫𝐜𝐡𝐢𝐯𝐨: ${file} (𝐋𝐢𝐧𝐞𝐚: ${line})\n` +
-                  `↬ ✦ 𝐄𝐫𝐫𝐨𝐫: ${name}\n\n` +
-                  `◈ 𝐃𝐞𝐭𝐚𝐥𝐥𝐞:\n${message.slice(0, 280)}\n\n` +
-                  `⋆┈┈
+  ? `── ✦ ── ✦ ──\n` +
+    `✨ ERROR DETECTADO\n` +
+    `── ✦ ── ✦ ──\n\n` +
+    `◇ Creador, algo se rompió. (–_–)\n\n` +
+    `➤ Comando: *${prefix + commandName}*\n` +
+    `➤ Archivo: ${file} (Línea: ${line})\n` +
+    `➤ Error: ${name}\n\n` +
+    `◇ Detalle:\n${message.slice(0, 280)}\n\n` +
+    `──────`
+  : '';
