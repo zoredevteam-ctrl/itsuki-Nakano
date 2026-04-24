@@ -491,3 +491,11 @@ export const handler = async (m, conn, plugins) => {
     `◇ Detalle:\n${message.slice(0, 280)}\n\n` +
 '──────'
   : '';
+if (debug) {
+                await conn.sendMessage(m.chat, { text: debug }, { quoted: m });
+            }
+        }
+    } catch (err) {
+        console.log(chalk.red('[HANDLER ERROR]'), err);
+    }
+};
