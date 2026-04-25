@@ -1,6 +1,7 @@
 /**
  * EVENTS/CONNECTION.JS - ITSUKI NAKANO
- * Detecta cuando un sub-bot cierra sesión y lo elimina automáticamente
+ * Detecta cuando un sub-bot cierra sesion REAL y lo elimina automaticamente
+ * IGNORA errores 500/503 (Stream Errored) — son reconexiones normales
  * Z0RT SYSTEMS 🌸
  */
 
@@ -10,70 +11,82 @@ export const event = 'connection.update'
 
 export const run = async (conn, update) => {
     try {
-        const { connection, lastDisconnect, qr } = update
-
-        // Solo procesar desconexiones
+        const { connection, lastDisconnect } = update
         if (connection !== 'close') return
 
         const statusCode = lastDisconnect?.error?.output?.statusCode
-        const reason     = lastDisconnect?.error?.output?.payload?.message || ''
+        const reason     = lastDisconnect?.error?.message || ''
 
-        console.log('[CONNECTION] Estado:', connection, '| Código:', statusCode, '| Razón:', reason)
+        console.log(`[CONNECTION] Estado: close | Código: ${statusCode} | Razón: ${reason}`)
 
-        // Códigos que indican sesión cerrada/borrada por el usuario
-        const SESION_CERRADA = [401, 440, 515]
-        const esSesionBorrada = SESION_CERRADA.includes(statusCode) ||
-            reason.includes('logged out') ||
-            reason.includes('Stream Errored') ||
-            reason.includes('Connection Closed')
+        // ── IGNORAR — estos son errores de red normales, NO cierres de sesión ──
+        // 500 = Internal server error (Baileys interno)
+        // 503 = Stream Errored (reconexión normal)
+        // 408 = Request Timeout
+        // undefined = desconexión sin razón clara
+        const IGNORAR = [500, 503, 408, undefined, null]
+        if (IGNORAR.includes(statusCode)) return
 
-        if (!esSesionBorrada) return
+        // ── SOLO actuar en cierre REAL de sesión ──────────────────────────────
+        // 401 = Logged out (usuario cerró sesión desde WhatsApp)
+        // 440 = Replaced (otra instancia tomó el control)
+        const SESION_CERRADA = [401, 440]
+        const esCierrReal = SESION_CERRADA.includes(statusCode) ||
+            reason.toLowerCase().includes('logged out')
 
-        // Buscar en la base de datos si este bot es un sub-bot
-        const db      = database.data
-        const myJid   = conn?.user?.id?.replace(/:[0-9A-Za-z]+(?=@s\.whatsapp\.net)/, '').split('@')[0] + '@s.whatsapp.net'
+        if (!esCierrReal) return
+
+        // ── Buscar si es un sub-bot registrado ────────────────────────────────
+        const db     = database.data
+        const myJid  = (conn?.user?.id || '').split(':')[0].split('@')[0] + '@s.whatsapp.net'
         const subbots = db?.subbots || {}
 
-        if (subbots[myJid]) {
-            console.log('[CONNECTION] Sub-bot desconectado detectado:', myJid)
+        if (!subbots[myJid]) return // No es sub-bot registrado, ignorar
 
-            // Marcar como desconectado
-            subbots[myJid].connected    = false
-            subbots[myJid].ultimoOnline = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' })
-            subbots[myJid].razonDesconexion = `${statusCode} — ${reason}`
+        console.log(`[CONNECTION] Sub-bot desconectado REAL: ${myJid} | Código: ${statusCode}`)
 
-            // Notificar al owner
-            const ownerJid = (global.ownerNumber || global.owner?.[0]?.[0] || '').replace(/[^0-9]/g, '') + '@s.whatsapp.net'
-            if (ownerJid && ownerJid !== '@s.whatsapp.net') {
-                try {
-                    const thumb = await global.getBannerThumb?.() || null
-                    const ctx   = global.getNewsletterCtx?.(thumb, `⌨ ${global.botName || 'Itsuki Nakano'}`, '𝐒𝐮𝐛-𝐁𝐨𝐭𝐬') || {}
+        // Marcar como desconectado
+        subbots[myJid].connected         = false
+        subbots[myJid].pendiente         = false
+        subbots[myJid].ultimoOnline      = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' })
+        subbots[myJid].razonDesconexion  = `${statusCode} — ${reason}`
 
-                    await conn.sendMessage(ownerJid, {
-                        text:
-                            `─── ❖ ── ✦ ── ❖ ───\n` +
-                            `✦ 𝐒𝐔𝐁-𝐁𝐎𝐓 𝐃𝐄𝐒𝐂𝐎𝐍𝐄𝐂𝐓𝐀𝐃𝐎\n` +
-                            `─── ❖ ── ✦ ── ❖ ───\n\n` +
-                            `◈ Número: *+${myJid.split('@')[0]}*\n` +
-                            `◈ Nombre: *${subbots[myJid].nombre || 'Sin nombre'}*\n` +
-                            `◈ Razón: *${reason || 'Sesión cerrada'}*\n` +
-                            `◈ Código: *${statusCode}*\n` +
-                            `◈ Hora: *${subbots[myJid].ultimoOnline}*\n\n` +
-                            `◈ La sesión fue eliminada automáticamente. ( ◡‿◡ *)\n` +
-                            `⋆┈┈｡ﾟ❃ུ۪ ❀ུ۪ ❁ུ۪ ❃ུ۪ ❀ུ۪ ﾟ｡┈┈⋆`,
-                        contextInfo: ctx
-                    })
-                } catch (e) {
-                    console.log('[CONNECTION] No pude notificar al owner:', e.message)
-                }
-            }
-
-            // Si la sesión fue borrada por el usuario (401 = logged out), eliminar el sub-bot de la DB
-            if (statusCode === 401 || reason.includes('logged out')) {
-                delete subbots[myJid]
-                console.log('[CONNECTION] Sub-bot eliminado de DB:', myJid)
-            }
+        // Si fue logout real (401), eliminar de la DB automaticamente
+        if (statusCode === 401 || reason.toLowerCase().includes('logged out')) {
+            delete subbots[myJid]
+            console.log(`[CONNECTION] Sub-bot eliminado de DB: ${myJid}`)
         }
+
+        // Notificar al owner
+        const ownerNum = (global.ownerNumber || '')
+            || (Array.isArray(global.owner) ? (Array.isArray(global.owner[0]) ? global.owner[0][0] : global.owner[0]) : '')
+        const ownerJid = String(ownerNum).replace(/[^0-9]/g, '') + '@s.whatsapp.net'
+
+        if (!ownerJid || ownerJid === '@s.whatsapp.net') return
+
+        try {
+            const thumb = typeof global.getBannerThumb === 'function' ? await global.getBannerThumb() : null
+            const ctx   = typeof global.getNewsletterCtx === 'function'
+                ? global.getNewsletterCtx(thumb, `⌨ ${global.botName || 'Itsuki Nakano'}`, '𝐒𝐮𝐛-𝐁𝐨𝐭𝐬')
+                : {}
+
+            await conn.sendMessage(ownerJid, {
+                text:
+                    `─── ❖ ── ✦ ── ❖ ───\n` +
+                    `✦ 𝐒𝐔𝐁-𝐁𝐎𝐓 𝐃𝐄𝐒𝐂𝐎𝐍𝐄𝐂𝐓𝐀𝐃𝐎\n` +
+                    `─── ❖ ── ✦ ── ❖ ───\n\n` +
+                    `◈ Numero: *+${myJid.split('@')[0]}*\n` +
+                    `◈ Razon: *${reason || 'Sesion cerrada'}*\n` +
+                    `◈ Codigo: *${statusCode}*\n` +
+                    `◈ Hora: *${subbots[myJid]?.ultimoOnline || new Date().toLocaleString('es-CO')}*\n\n` +
+                    `◈ ${statusCode === 401 ? 'La sesion fue eliminada automaticamente.' : 'Marcado como desconectado.'} ( ◡‿◡ *)\n` +
+                    `⋆┈┈｡ﾟ❃ུ۪ ❀ུ۪ ❁ུ۪ ❃ུ۪ ❀ུ۪ ﾟ｡┈┈⋆`,
+                contextInfo: ctx
+            })
+        } catch (e) {
+            console.log('[CONNECTION] No pude notificar al owner:', e.message)
+        }
+
     } catch (e) {
         console.error('[CONNECTION EVENT ERROR]', e.message)
     }
